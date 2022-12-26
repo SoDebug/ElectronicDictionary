@@ -1,6 +1,8 @@
 from PyQt5 import QtGui, QtWidgets, QtCore
 import sys
 
+from PyQt5.QtCore import Qt
+
 # 创建应用
 app = QtWidgets.QApplication(sys.argv)
 
@@ -43,7 +45,7 @@ palette.setColor(QtGui.QPalette.Button, QtGui.QColor(0, 150, 136))
 button.setPalette(palette)
 
 # 将文本框和按钮添加到布局管理器中
-layout.addWidget(title)
+layout.addWidget(title, alignment=Qt.AlignCenter)
 layout.addWidget(text_field)
 layout.addWidget(button)
 
