@@ -8,21 +8,21 @@ from PyQt5.QtWidgets import QSizePolicy
 app = QtWidgets.QApplication(sys.argv)
 
 # 创建窗口
-window = QtWidgets.QWidget()
-window.setWindowTitle('Material Input Field')
+Main_Window = QtWidgets.QWidget()
+Main_Window.setWindowTitle('Material Input Field')
 
 
 # 创建大标题
-title = QtWidgets.QLabel('知道你在努力...')
+hello_words = QtWidgets.QLabel('知道你在努力...')
 # 设置大标题的字体
 font = QtGui.QFont()
-font.setPointSize(20)
+font.setPointSize(18)
 font.setBold(True)
-title.setFont(font)
+hello_words.setFont(font)
 # 设置大标题的颜色
 palette = QtGui.QPalette()
 palette.setColor(QtGui.QPalette.Foreground, QtGui.QColor(0, 0, 0))
-title.setPalette(palette)
+hello_words.setPalette(palette)
 
 # 创建布局管理器(QVBoxLayout：垂直)
 layout = QtWidgets.QVBoxLayout()
@@ -31,7 +31,7 @@ layout = QtWidgets.QVBoxLayout()
 text_field = QtWidgets.QLineEdit()
 text_field.setPlaceholderText('键入你想要查询的单词...')
 # 设置输入框的最小宽高
-text_field.setMinimumSize(100, 50)
+text_field.setMinimumSize(100, 40)
 
 # 设置文本框的颜色
 palette = QtGui.QPalette()
@@ -39,24 +39,24 @@ palette.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 255, 255))
 text_field.setPalette(palette)
 
 # 创建按钮
-button = QtWidgets.QPushButton('查询')
+user_submit = QtWidgets.QPushButton('查询')
 
 # 设置按钮的颜色
 palette = QtGui.QPalette()
 palette.setColor(QtGui.QPalette.Button, QtGui.QColor(0, 150, 136))
-button.setPalette(palette)
+user_submit.setPalette(palette)
 
 # 将文本框和按钮添加到布局管理器中
-layout.addWidget(title, alignment=Qt.AlignCenter)
+layout.addWidget(hello_words, alignment=Qt.AlignCenter)
 layout.addWidget(text_field)
-layout.addWidget(button)
+layout.addWidget(user_submit)
 
 # 将布局管理器设置到窗口中
-window.setLayout(layout)
+Main_Window.setLayout(layout)
 
 # 设置窗口大小
-window.resize(400, 300)
+Main_Window.resize(400, 300)
 # 显示窗口
-window.show()
+Main_Window.show()
 
 sys.exit(app.exec_())
