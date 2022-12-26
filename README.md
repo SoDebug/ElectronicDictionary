@@ -1,0 +1,2 @@
+# ElectronicDictionary
+重庆理工大学电子信息工程智能数据课程设计
