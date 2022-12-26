@@ -4,22 +4,22 @@ import sys
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QSizePolicy
 
-# 创建应用
+# 创建主进程
 app = QtWidgets.QApplication(sys.argv)
 
-# 创建窗口
+# 创建主窗口
 Main_Window = QtWidgets.QWidget()
 Main_Window.setWindowTitle('Material Input Field')
 
 
-# 创建大标题
+# 创建问候语
 hello_words = QtWidgets.QLabel('知道你在努力...')
-# 设置大标题的字体
+# 设置问候语字体属性
 font = QtGui.QFont()
 font.setPointSize(18)
 font.setBold(True)
 hello_words.setFont(font)
-# 设置大标题的颜色
+# 设置问候语颜色
 palette = QtGui.QPalette()
 palette.setColor(QtGui.QPalette.Foreground, QtGui.QColor(0, 0, 0))
 hello_words.setPalette(palette)
@@ -38,7 +38,7 @@ palette = QtGui.QPalette()
 palette.setColor(QtGui.QPalette.Base, QtGui.QColor(255, 255, 255))
 text_field.setPalette(palette)
 
-# 创建按钮
+# 创建用户查询的提交按钮
 user_submit = QtWidgets.QPushButton('查询')
 
 # 设置按钮的颜色
