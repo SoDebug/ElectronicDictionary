@@ -24,7 +24,6 @@ title.setPalette(palette)
 
 # 创建布局管理器
 layout = QtWidgets.QVBoxLayout()
-layout.setAlignment(QtWidgets.QTreeWidgetItem.)
 
 # 创建文本框
 text_field = QtWidgets.QLineEdit()
