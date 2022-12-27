@@ -7,18 +7,6 @@ app = QtWidgets.QApplication(sys.argv)
 Main_Window = QtWidgets.QWidget()
 Main_Window.setWindowTitle('Material Input Field')
 
-# 创建问候语
-hello_words = QtWidgets.QLabel('知道你在努力...')
-# 设置问候语字体属性
-font = QtGui.QFont()
-font.setPointSize(18)
-font.setBold(True)
-hello_words.setFont(font)
-# 设置问候语颜色
-palette = QtGui.QPalette()
-palette.setColor(QtGui.QPalette.Foreground, QtGui.QColor(0, 0, 0))
-hello_words.setPalette(palette)
-
 # 创建布局管理器(QVBoxLayout：垂直)
 layout = QtWidgets.QVBoxLayout()
 
