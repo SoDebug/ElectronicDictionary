@@ -1,59 +1,6 @@
-from PyQt5 import QtGui, QtWidgets, QtCore
+from PyQt5.QtCore import Qt
 import sys
-import DataBase
-
-# # 创建主进程
-# app = QtWidgets.QApplication(sys.argv)
-# # 创建主窗口
-# Main_Window = QtWidgets.QWidget()
-# Main_Window.setWindowTitle('Material Input Field')
-# # 创建布局管理器(QVBoxLayout：垂直)
-# layout = QtWidgets.QVBoxLayout()
-#
-# # 使用表单数据管理器而不是简单的文本框
-# form_layout = QtWidgets.QFormLayout()
-# user_submit = QtWidgets.QLineEdit()
-# form_layout.addRow('', user_submit)
-# user_submit.setPlaceholderText('键入你想要查询的单词...')
-# layout.addLayout(form_layout)
-# # 创建查询提交按钮
-# submit_button = QtWidgets.QPushButton('查询')
-#
-#
-# # 获取输入内容,这部分代码是测试用的代码
-# # def get_raw():
-# #     submit_words = user_submit.text()
-# #     if submit_words == 'admin':
-# #         QtWidgets.QMessageBox.information(Main_Window, '提示', '你查询的单词是admin，测试通过')
-# #     else:
-# #         QtWidgets.QMessageBox.critical(Main_Window, '错误', '输入字符非测试内容，或者提取字符出错')
-#
-# def check_raw():
-#     # DataBase.sample()
-#     content = DataBase.check()
-#     judge = 0
-#     if judge == 0:
-#         QtWidgets.QMessageBox.information(Main_Window, '提示', str(content))
-#     else:
-#         QtWidgets.QMessageBox.critical(Main_Window, '错误', '输入字符非测试内容，或者提取字符出错')
-#
-#
-# # submit_button.clicked.connect(check_raw)
-# submit_button.clicked.connect(check_raw)
-# layout.addWidget(submit_button)
-#
-# # 将布局管理器设置到窗口中
-# Main_Window.setLayout(layout)
-#
-# # 设置窗口大小
-# Main_Window.resize(400, 300)
-# # 显示窗口
-# Main_Window.show()
-#
-# sys.exit(app.exec_())
-
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit
+from PyQt5.QtWidgets import QLineEdit, QHBoxLayout
 
 # 拟实现多页面
 import sys
@@ -68,8 +15,10 @@ class Page1(QWidget):
 
 # 按钮以及输入框的相关属性设置
     def initUI(self):
-        # 使用 QVBoxLayout 布局管理器来管理控件的布局
-        layout = QVBoxLayout()
+        # 创建 QVBoxLayout 布局管理器
+        layout = QHBoxLayout()
+        # 创建 QV
+        vbox = QVBoxLayout()
         # 创建输入框
         self.lineedit = QLineEdit(self)
         self.lineedit.setPlaceholderText("键入所需查询单词...")
@@ -83,16 +32,21 @@ class Page1(QWidget):
         self.button.setFixedWidth(100)
         # 设置按钮的高度
         self.button.setFixedHeight(30)
-        # 将输入框和按钮添加到布局管理器中
-        # # 并在输入框和按钮之间添加了伸展空间，使用输入框垂直居中，按钮紧靠底部
-        # layout.addStretch()
-        layout.addWidget(self.lineedit)
-        # layout.addStretch()
-        layout.addWidget(self.button)
+        # 插入伸展空间
+        layout.insertStretch(0)
+        # 将输入框插入布局管理器的第一个位置
+        layout.insertWidget(2, self.lineedit)
+        # 插入伸展空间
+        # layout.insertStretch(1)
+        # 将按钮插入布局管理器的第三个位置
+        layout.insertWidget(3, self.button)
+        # 插入伸展空间
+        layout.insertStretch(4)
         # 设置小部件的布局管理器
         self.setLayout(layout)
         # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
+
 
     def onButtonClicked(self):
         # 获取输入的内容
@@ -109,11 +63,34 @@ class Page2(QWidget):
         self.initUI()
 
     def initUI(self):
-        self.label = QLabel(self)
+        # 创建 QVBoxLayout 布局管理器
+        layout = QVBoxLayout()
+        # 创建第一个 QLabel 组件
+        self.label1 = QLabel("词性：动词")
+        self.label1.setFixedHeight(20)
+        # 创建第二个 QLabel 组件
+        self.label2 = QLabel("意思：制作、建立、使成为")
+        self.label2.setFixedHeight(20)
+        # 创建第三个 QLabel 组件
+        self.label3 = QLabel("常用搭配：make a mistake, make a point, make a difference")
+        self.label3.setFixedHeight(20)
+        # 创建第四个 QLabel 组件
+        self.label4 = QLabel("例句：I'm going to make a cake for my mother's birthday.")
+        self.label4.setFixedHeight(20)
+        # 将第一个 QLabel 组件添加到布局管理器中
+        layout.addWidget(self.label1)
+        # 将第二个 QLabel 组件添加到布局管理器中
+        layout.addWidget(self.label2)
+        # 将第三个 QLabel 组件添加到布局管理器中
+        layout.addWidget(self.label3)
+        # 将第四个 QLabel 组件添加到布局管理器中
+        layout.addWidget(self.label4)
+        # 设置小部件的布局管理器
+        self.setLayout(layout)
 
     def setQueryWord(self, query_word):
-        # 在第二页中使用输入的内容
-        self.label.setText("你输入的单词是：" + query_word)
+        # Set the application name to "你输入的单词是：[query_word]"
+        QApplication.instance().setApplicationName(query_word)
 
 
 if __name__ == "__main__":
@@ -124,6 +101,6 @@ if __name__ == "__main__":
     stacked_widget.addWidget(page1)
     stacked_widget.addWidget(page2)
     # 设置窗口大小
-    stacked_widget.resize(400, 300)
+    stacked_widget.resize(400, 400)
     stacked_widget.show()
     sys.exit(app.exec_())
