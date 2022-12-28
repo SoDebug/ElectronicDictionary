@@ -1,7 +1,7 @@
-# from PyQt5 import QtGui, QtWidgets, QtCore
-# import sys
-# import DataBase
-#
+from PyQt5 import QtGui, QtWidgets, QtCore
+import sys
+import DataBase
+
 # # 创建主进程
 # app = QtWidgets.QApplication(sys.argv)
 # # 创建主窗口
@@ -53,53 +53,77 @@
 # sys.exit(app.exec_())
 
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
-
+from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel, QLineEdit
 
 # 拟实现多页面
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 
 
-class MainWindow(QWidget):
+# 定义第一页面的主要属性和初始化
+class Page1(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.initUI()
+
+# 按钮以及输入框的相关属性设置
+    def initUI(self):
+        # 使用 QVBoxLayout 布局管理器来管理控件的布局
+        layout = QVBoxLayout()
+        # 创建输入框
+        self.lineedit = QLineEdit(self)
+        self.lineedit.setPlaceholderText("键入所需查询单词...")
+        # 设置输入框的宽度
+        self.lineedit.setFixedWidth(300)
+        # 设置输入框的高度
+        self.lineedit.setFixedHeight(30)
+        # 创建按钮
+        self.button = QPushButton("查询", self)
+        # 设置按钮的宽度
+        self.button.setFixedWidth(100)
+        # 设置按钮的高度
+        self.button.setFixedHeight(30)
+        # 将输入框和按钮添加到布局管理器中
+        # # 并在输入框和按钮之间添加了伸展空间，使用输入框垂直居中，按钮紧靠底部
+        # layout.addStretch()
+        layout.addWidget(self.lineedit)
+        # layout.addStretch()
+        layout.addWidget(self.button)
+        # 设置小部件的布局管理器
+        self.setLayout(layout)
+        # 连接信号和槽函数
+        self.button.clicked.connect(self.onButtonClicked)
+
+    def onButtonClicked(self):
+        # 获取输入的内容
+        query_word = self.lineedit.text()
+        # 设置当前显示的小部件为第二页
+        stacked_widget.setCurrentIndex(1)
+        # 将输入的内容传递到第二页
+        page2.setQueryWord(query_word)
+
+
+class Page2(QWidget):
     def __init__(self):
         super().__init__()
         self.initUI()
 
     def initUI(self):
-        # 创建 QStackedWidget 对象。
-        stacked_widget = QStackedWidget(self)
+        self.label = QLabel(self)
 
-        # 创建第一个窗口页面，包含一个按钮。
-        page1 = QWidget()
-        button = QPushButton("Go to page 2", page1)
-        button.clicked.connect(self.goToPage2)
-
-        # 创建第二个窗口页面，包含一个文本标签。
-        page2 = QWidget()
-        label = QLabel("This is page 2", page2)
-
-        # 将两个窗口页面添加到 QStackedWidget 中。
-        stacked_widget.addWidget(page1)
-        stacked_widget.addWidget(page2)
-
-        # 设置第一个窗口页面为当前显示的窗口页面。
-        stacked_widget.setCurrentIndex(0)
-
-        # 创建布局并添加 QStackedWidget。
-        layout = QVBoxLayout()
-        layout.addWidget(stacked_widget)
-        self.setLayout(layout)
-
-    def goToPage2(self):
-        # 获取 QStackedWidget 对象。
-        stacked_widget = self.layout().itemAt(0).widget()
-        # 设置第二个窗口页面为当前显示的窗口页面。
-        stacked_widget.setCurrentIndex(1)
+    def setQueryWord(self, query_word):
+        # 在第二页中使用输入的内容
+        self.label.setText("你输入的单词是：" + query_word)
 
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MainWindow()
-    window.show()
+    stacked_widget = QStackedWidget()
+    page1 = Page1()
+    page2 = Page2()
+    stacked_widget.addWidget(page1)
+    stacked_widget.addWidget(page2)
+    # 设置窗口大小
+    stacked_widget.resize(400, 300)
+    stacked_widget.show()
     sys.exit(app.exec_())
