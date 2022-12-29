@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
 # 拟实现多页面
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
-
+import check
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -52,7 +52,7 @@ class Page1(QWidget):
             self.button.move(180,200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(50,150,40,20)
+            self.lineedit.setGeometry(50,120,40,20)
             self.button.setGeometry(140, 220, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
@@ -65,6 +65,7 @@ class Page1(QWidget):
         stacked_widget.setCurrentIndex(1)
         # 将输入的内容传递到第二页
         page2.setQueryWord(query_word)
+        return query_word
 
 
 class Page2(QWidget):
@@ -75,9 +76,22 @@ class Page2(QWidget):
         # 如果 self.option_Box == 1 则使用布局管理器管理布局
         # 如果 self.option_Box = -1 则使用 setGeometry 管理布局
         self.option_Box = 1
-        self.initUI()
+        # self.initUI()
 
-    def initUI(self):
+    # def setQueryWord(self, query_word):
+    #     self.query_word = query_word
+    #     key = self.query_word
+    #     # Set the application name to "你输入的单词是：[query_word]"
+    #     self.parent().setWindowTitle("Dictionary - " + query_word)
+
+    # def initUI(self, data):
+    def setQueryWord(self, query_word):
+        self.query_word = query_word
+        key = self.query_word
+        # Set the application name to "你输入的单词是：[query_word]"
+        self.parent().setWindowTitle("Dictionary - " + query_word)
+        # 传递过来的数据应当是名为 data 的列表
+        # word, pronunciation, pos, collocations, example = data
         result = ["1","2","3","4","5"]
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
@@ -135,10 +149,10 @@ class Page2(QWidget):
         stacked_widget.setCurrentIndex(0)
         event.accept()
 
-    def setQueryWord(self, query_word):
-        self.query_word = query_word
-        # Set the application name to "你输入的单词是：[query_word]"
-        self.parent().setWindowTitle("Dictionary - " + query_word)
+    # def setQueryWord(self, query_word):
+    #     self.query_word = query_word
+    #     # Set the application name to "你输入的单词是：[query_word]"
+    #     self.parent().setWindowTitle("Dictionary - " + query_word)
 
 
 if __name__ == "__main__":
@@ -149,6 +163,6 @@ if __name__ == "__main__":
     stacked_widget.addWidget(page1)
     stacked_widget.addWidget(page2)
     # 设置窗口大小
-    stacked_widget.resize(400, 400)
+    stacked_widget.resize(400, 300)
     stacked_widget.show()
     sys.exit(app.exec_())
