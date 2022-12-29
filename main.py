@@ -74,23 +74,29 @@ class Page2(QWidget):
         # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
         # 如果 self.option_Box == 1 则使用布局管理器管理布局
         # 如果 self.option_Box = -1 则使用 setGeometry 管理布局
-        self.option_Box = 1
+        self.option_Box = 0
         self.initUI()
 
     def initUI(self):
+        result = ["1","2","3","4","5"]
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
         # 查询的单词本身
-        self.word = QLabel("1111111111111111111111111111111111111")
+        self.word = QLabel()
+        self.word.setText(result[0])
         # 查询的发音
-        self.pronunciation = QLabel("2222222222222222222222111111111111")
+        self.pronunciation = QLabel()
+        self.pronunciation.setText(result[1])
         # 查询的词性
-        self.pos = QLabel("333333333333333333311111111111111")
+        self.pos = QLabel()
+        self.pos.setText(result[2])
         # 查询的常用搭配
-        self.collocations = QLabel("44444444444444444444111111111111111")
+        self.collocations = QLabel()
+        self.collocations.setText(result[3])
         # 查询的例句
-        self.example = QLabel("5555555555555555511111111111111111")
+        self.example = QLabel()
+        self.example.setText(result[4])
 
         if self.option_Box == 1:
             # 创建 QVBoxLayout 布局管理器
@@ -107,18 +113,22 @@ class Page2(QWidget):
             # 设置小部件的布局管理器
             self.setLayout(layout)
         elif self.option_Box == 0:
-            self.word.move(490, 150)
-            self.pronunciation.move(180,200)
-            self.pos.move(180, 200)
-            self.collocations.move(180, 200)
-            self.example.move(180, 200)
+            # 此种布局管理办法在 page2 中无法生效
+            # self.word.move(490, 150)
+            # self.pronunciation.move(180,200)
+            # self.pos.move(180, 200)
+            # self.collocations.move(180, 200)
+            # self.example.move(180, 200)
+            print("你正在使用一种无效的布局管理办法，请切换回布局管理器来管理此页面布局")
         elif self.option_Box == -1:
-            # setGeometry(x,y,width,height)
-            self.word.setGeometry(800,1000,40,20)
+            # 此种布局管理办法在 page2 中无法生效
+            # # setGeometry(x,y,width,height)
+            # self.word.setGeometry(800,1000,40,20)
             # self.pronunciation.setGeometry(100,200,40,20)
             # self.pos.setGeometry(200,300,40,20)
             # self.collocations.setGeometry(300,400,40,20)
             # self.example.setGeometry(400,500,40,20)
+            print("你正在使用一种无效的布局管理办法，请切换回布局管理器来管理此页面布局")
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
         # 比如将stacked_widget的当前小部件设为第一页
