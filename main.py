@@ -89,8 +89,9 @@ class Page2(QWidget):
         self.setLayout(layout)
 
     def setQueryWord(self, query_word):
+        self.query_word = query_word
         # Set the application name to "你输入的单词是：[query_word]"
-        QApplication.instance().setApplicationName(query_word)
+        self.parent().setWindowTitle("Dictionary - " + query_word)
 
 
 if __name__ == "__main__":
@@ -99,6 +100,7 @@ if __name__ == "__main__":
     page1 = Page1()
     page2 = Page2()
     stacked_widget.addWidget(page1)
+
     stacked_widget.addWidget(page2)
     # 设置窗口大小
     stacked_widget.resize(400, 400)
