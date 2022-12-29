@@ -8,18 +8,14 @@ from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, 
 class Page1(QWidget):
     def __init__(self):
         super().__init__()
-        self.initUI()
-
-# 按钮以及输入框的相关属性设置
-    def initUI(self):
         # 设置布局管理器为可选选项，
         # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
         # 如果 self.option_Box == 0 则使用布局管理器管理布局
         self.option_Box = 0
-        # 创建 QVBoxLayout 布局管理器
-        # layout = QHBoxLayout()
-        # # 创建 QV
-        # vbox = QVBoxLayout()
+        self.initUI()
+
+# 按钮以及输入框的相关属性设置
+    def initUI(self):
         # 创建输入框
         self.lineedit = QLineEdit(self)
         self.lineedit.setPlaceholderText("键入所需查询单词...")
