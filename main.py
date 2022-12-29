@@ -9,8 +9,8 @@ class Page1(QWidget):
     def __init__(self):
         super().__init__()
         # 设置布局管理器为可选选项，
-        # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
-        # 如果 self.option_Box == 0 则使用布局管理器管理布局
+        # 如果self.option_Box = 0，则使用 self.lineedit.move 管理布局；
+        # 如果 self.option_Box = 1 则使用布局管理器管理布局
         self.option_Box = 0
         self.initUI()
 
@@ -65,34 +65,49 @@ class Page1(QWidget):
 class Page2(QWidget):
     def __init__(self):
         super().__init__()
+        # 设置布局管理器为可选选项，
+        # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
+        # 如果 self.option_Box == 1 则使用布局管理器管理布局
+        self.option_Box = 1
         self.initUI()
 
     def initUI(self):
-        # 创建 QVBoxLayout 布局管理器
-        layout = QVBoxLayout()
+        # # 创建 QVBoxLayout 布局管理器
+        # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
+        word_type = "动词"
+        self.label0 = QLabel(f"词性：{word_type}")
+
         self.label1 = QLabel("词性：动词")
-        self.label1.setFixedHeight(20)
+        self.label1.setStyleSheet("line-height: 2px;")
+
         # 创建第二个 QLabel 组件
         self.label2 = QLabel("意思：制作、建立、使成为")
-        self.label2.setFixedHeight(20)
+        self.label2.setStyleSheet("line-height: 2px;")
+
         # 创建第三个 QLabel 组件
         self.label3 = QLabel("常用搭配：make a mistake, make a point, make a difference")
-        self.label3.setFixedHeight(20)
         # 创建第四个 QLabel 组件
         self.label4 = QLabel("例句：I'm going to make a cake for my mother's birthday.")
-        self.label4.setFixedHeight(20)
-        # 将第一个 QLabel 组件添加到布局管理器中
-        layout.addWidget(self.label1)
-        # 将第二个 QLabel 组件添加到布局管理器中
-        layout.addWidget(self.label2)
-        # 将第三个 QLabel 组件添加到布局管理器中
-        layout.addWidget(self.label3)
-        # 将第四个 QLabel 组件添加到布局管理器中
-        layout.addWidget(self.label4)
-        # 设置小部件的布局管理器
-        self.setLayout(layout)
 
+        if self.option_Box == 1:
+            # 创建 QVBoxLayout 布局管理器
+            layout = QVBoxLayout()
+            layout.addWidget(self.label0)
+            # 将第一个 QLabel 组件添加到布局管理器中
+            layout.addWidget(self.label1)
+            # 将第二个 QLabel 组件添加到布局管理器中
+            layout.addWidget(self.label2)
+            # 将第三个 QLabel 组件添加到布局管理器中
+            layout.addWidget(self.label3)
+            # 将第四个 QLabel 组件添加到布局管理器中
+            # 设置小部件的布局管理器
+            self.setLayout(layout)
+        elif self.option_Box == 0:
+            self.label1.move(490, 150)
+            self.label2.move(180,200)
+            self.label3.move(180, 200)
+            self.label4.move(180, 200)
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
         # 比如将stacked_widget的当前小部件设为第一页
