@@ -16,6 +16,6 @@ def check(query_word):
     else:
         # 将查询结果储存至列表 data 中
         data = list(result)
+    return data
     # 关闭数据库连接
     conn.close()
-
