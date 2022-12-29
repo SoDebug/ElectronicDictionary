@@ -57,7 +57,7 @@ class Page1(QWidget):
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
-
+    # 添加第一页按钮触发、输入框内容获取函数
     def onButtonClicked(self):
         # 获取输入的内容
         query_word = self.lineedit.text()
@@ -102,19 +102,26 @@ class Page2(QWidget):
         # 创建第一个 QLabel 组件
         # 查询的单词本身
         self.word = QLabel()
-        self.word.setText(word)
+        self.word.setText("单词：" + word)
         # 查询的发音
         self.pronunciation = QLabel()
-        self.pronunciation.setText(pronunciation)
+        self.pronunciation.setText("发音：" + pronunciation)
         # 查询的词性
         self.pos = QLabel()
-        self.pos.setText(pos)
+        self.pos.setText("词性：" + pos)
         # 查询的常用搭配
         self.collocations = QLabel()
-        self.collocations.setText(collocations)
+        self.collocations.setText("常用搭配：" + collocations)
         # 查询的例句
         self.example = QLabel()
-        self.example.setText(example)
+        self.example.setText("例句学习：" + example)
+
+        # 创建按钮
+        self.button = QPushButton("返回查询", self)
+        # 设置按钮的宽度
+        self.button.setFixedWidth(100)
+        # 设置按钮的高度
+        self.button.setFixedHeight(30)
 
         if self.option_Box == 1:
             # 创建 QVBoxLayout 布局管理器
@@ -128,8 +135,16 @@ class Page2(QWidget):
             layout.addWidget(self.collocations)
             # 将第四个 QLabel 组件添加到布局管理器中
             layout.addWidget(self.example)
+            # 创建水平布局管理器并使按钮居中显示
+            h_layout = QHBoxLayout()
+            h_layout.addStretch()
+            h_layout.addWidget(self.button)
+            h_layout.addStretch()
+            layout.addLayout(h_layout)
             # 设置小部件的布局管理器
             self.setLayout(layout)
+            # 连接信号和槽函数
+            self.button.clicked.connect(self.onButtonClicked)
         elif self.option_Box == 0:
             # 此种布局管理办法在 page2 中无法生效
             # self.word.move(490, 150)
@@ -147,6 +162,12 @@ class Page2(QWidget):
             # self.collocations.setGeometry(300,400,40,20)
             # self.example.setGeometry(400,500,40,20)
             print("你正在使用一种无效的布局管理办法，请切换回布局管理器来管理此页面布局")
+
+    # 添加第二页按钮的作用：返回查询界面继续查询单词
+    def onButtonClicked(self):
+        # 设置当前显示的小部件为第二页
+        stacked_widget.setCurrentIndex(0)
+
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
         # 比如将stacked_widget的当前小部件设为第一页
