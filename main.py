@@ -1,7 +1,4 @@
-from PyQt5.QtCore import Qt
-import sys
 from PyQt5.QtWidgets import QLineEdit, QHBoxLayout
-
 # 拟实现多页面
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
@@ -15,10 +12,14 @@ class Page1(QWidget):
 
 # 按钮以及输入框的相关属性设置
     def initUI(self):
+        # 设置布局管理器为可选选项，
+        # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
+        # 如果 self.option_Box == 0 则使用布局管理器管理布局
+        self.option_Box = 0
         # 创建 QVBoxLayout 布局管理器
-        layout = QHBoxLayout()
-        # 创建 QV
-        vbox = QVBoxLayout()
+        # layout = QHBoxLayout()
+        # # 创建 QV
+        # vbox = QVBoxLayout()
         # 创建输入框
         self.lineedit = QLineEdit(self)
         self.lineedit.setPlaceholderText("键入所需查询单词...")
@@ -32,19 +33,27 @@ class Page1(QWidget):
         self.button.setFixedWidth(100)
         # 设置按钮的高度
         self.button.setFixedHeight(30)
-        # 插入伸展空间
-        layout.insertStretch(0)
-        # 将输入框插入布局管理器的第一个位置
-        layout.insertWidget(2, self.lineedit)
-        # 插入伸展空间
-        # layout.insertStretch(1)
-        # 将按钮插入布局管理器的第三个位置
-        layout.insertWidget(3, self.button)
-        # 插入伸展空间
-        layout.insertStretch(4)
-        # 设置小部件的布局管理器
-        self.setLayout(layout)
-        # 连接信号和槽函数
+        if self.option_Box == 1:
+            # 创建 QVBoxLayout 布局管理器
+            layout = QHBoxLayout()
+            # 创建 QV
+            vbox = QVBoxLayout()
+            # 插入伸展空间
+            layout.insertStretch(0)
+            # 将输入框插入布局管理器的第一个位置
+            layout.insertWidget(2, self.lineedit)
+            # 插入伸展空间
+            layout.insertStretch(1)
+            # 将按钮插入布局管理器的第三个位置
+            layout.insertWidget(3, self.button)
+            # 插入伸展空间
+            layout.insertStretch(4)
+            # 设置小部件的布局管理器
+            self.setLayout(layout)
+        elif self.option_Box == 0:
+            self.lineedit.move(90, 150)
+            self.button.move(180,200)
+            # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
 
