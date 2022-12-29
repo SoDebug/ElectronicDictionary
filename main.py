@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QLineEdit, QHBoxLayout
+from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
 # 拟实现多页面
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
@@ -93,6 +93,12 @@ class Page2(QWidget):
         # 设置小部件的布局管理器
         self.setLayout(layout)
 
+    def closeEvent(self, event):
+        # 在这里添加你想要在关闭窗口时执行的代码
+        # 比如将stacked_widget的当前小部件设为第一页
+        stacked_widget.setCurrentIndex(0)
+        event.accept()
+
     def setQueryWord(self, query_word):
         self.query_word = query_word
         # Set the application name to "你输入的单词是：[query_word]"
@@ -105,7 +111,6 @@ if __name__ == "__main__":
     page1 = Page1()
     page2 = Page2()
     stacked_widget.addWidget(page1)
-
     stacked_widget.addWidget(page2)
     # 设置窗口大小
     stacked_widget.resize(400, 400)
