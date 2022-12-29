@@ -91,30 +91,30 @@ class Page2(QWidget):
     # （2）绘制第二页面
     def setQueryWord(self, query_word):
         self.query_word = query_word
-        key = self.query_word
         # Set the application name to "你输入的单词是：[query_word]"
         self.parent().setWindowTitle("Dictionary - " + query_word)
         # 传递过来的数据应当是名为 data 的列表
-        # word, pronunciation, pos, collocations, example = data
-        result = ["1","2","3","4","5"]
+        data = check.check(self.query_word)
+        print(data)
+        word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
         # 查询的单词本身
         self.word = QLabel()
-        self.word.setText(result[0])
+        self.word.setText(word)
         # 查询的发音
         self.pronunciation = QLabel()
-        self.pronunciation.setText(result[1])
+        self.pronunciation.setText(pronunciation)
         # 查询的词性
         self.pos = QLabel()
-        self.pos.setText(result[2])
+        self.pos.setText(pos)
         # 查询的常用搭配
         self.collocations = QLabel()
-        self.collocations.setText(result[3])
+        self.collocations.setText(collocations)
         # 查询的例句
         self.example = QLabel()
-        self.example.setText(result[4])
+        self.example.setText(example)
 
         if self.option_Box == 1:
             # 创建 QVBoxLayout 布局管理器
