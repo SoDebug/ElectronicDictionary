@@ -85,6 +85,10 @@ class Page2(QWidget):
     #     self.parent().setWindowTitle("Dictionary - " + query_word)
 
     # def initUI(self, data):
+    # 现在的 setQueryWord() 代替原方法 initUI() 的职能
+    # setQueryWord()：
+    # （1）替换应用名
+    # （2）绘制第二页面
     def setQueryWord(self, query_word):
         self.query_word = query_word
         key = self.query_word
