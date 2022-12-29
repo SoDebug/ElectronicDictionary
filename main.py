@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
 # 拟实现多页面
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
-import check
+import DataBase
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -94,7 +94,7 @@ class Page2(QWidget):
         # Set the application name to "你输入的单词是：[query_word]"
         self.parent().setWindowTitle("Dictionary - " + query_word)
         # 传递过来的数据应当是名为 data 的列表
-        data = check.check(self.query_word)
+        data = DataBase.check(self.query_word)
         print(data)
         word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
