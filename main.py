@@ -11,7 +11,8 @@ class Page1(QWidget):
         # 设置布局管理器为可选选项，
         # 如果self.option_Box = 0，则使用 self.lineedit.move 管理布局；
         # 如果 self.option_Box = 1 则使用布局管理器管理布局
-        self.option_Box = 0
+        # 如果 self.option_Box = -1 则使用 setGeometry 管理布局
+        self.option_Box = -1
         self.initUI()
 
 # 按钮以及输入框的相关属性设置
@@ -49,6 +50,10 @@ class Page1(QWidget):
         elif self.option_Box == 0:
             self.lineedit.move(90, 150)
             self.button.move(180,200)
+        elif self.option_Box == -1:
+            # setGeometry(x,y,width,height)
+            self.lineedit.setGeometry(50,100,40,20)
+            self.button.setGeometry(140, 180, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
@@ -68,6 +73,7 @@ class Page2(QWidget):
         # 设置布局管理器为可选选项，
         # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
         # 如果 self.option_Box == 1 则使用布局管理器管理布局
+        # 如果 self.option_Box = -1 则使用 setGeometry 管理布局
         self.option_Box = 1
         self.initUI()
 
@@ -75,39 +81,44 @@ class Page2(QWidget):
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
-        word_type = "动词"
-        self.label0 = QLabel(f"词性：{word_type}")
-
-        self.label1 = QLabel("词性：动词")
-        self.label1.setStyleSheet("line-height: 2px;")
-
-        # 创建第二个 QLabel 组件
-        self.label2 = QLabel("意思：制作、建立、使成为")
-        self.label2.setStyleSheet("line-height: 2px;")
-
-        # 创建第三个 QLabel 组件
-        self.label3 = QLabel("常用搭配：make a mistake, make a point, make a difference")
-        # 创建第四个 QLabel 组件
-        self.label4 = QLabel("例句：I'm going to make a cake for my mother's birthday.")
+        # 查询的单词本身
+        self.word = QLabel("1111111111111111111111111111111111111")
+        # 查询的发音
+        self.pronunciation = QLabel("2222222222222222222222111111111111")
+        # 查询的词性
+        self.pos = QLabel("333333333333333333311111111111111")
+        # 查询的常用搭配
+        self.collocations = QLabel("44444444444444444444111111111111111")
+        # 查询的例句
+        self.example = QLabel("5555555555555555511111111111111111")
 
         if self.option_Box == 1:
             # 创建 QVBoxLayout 布局管理器
             layout = QVBoxLayout()
-            layout.addWidget(self.label0)
+            layout.addWidget(self.word)
             # 将第一个 QLabel 组件添加到布局管理器中
-            layout.addWidget(self.label1)
+            layout.addWidget(self.pronunciation)
             # 将第二个 QLabel 组件添加到布局管理器中
-            layout.addWidget(self.label2)
+            layout.addWidget(self.pos)
             # 将第三个 QLabel 组件添加到布局管理器中
-            layout.addWidget(self.label3)
+            layout.addWidget(self.collocations)
             # 将第四个 QLabel 组件添加到布局管理器中
+            layout.addWidget(self.example)
             # 设置小部件的布局管理器
             self.setLayout(layout)
         elif self.option_Box == 0:
-            self.label1.move(490, 150)
-            self.label2.move(180,200)
-            self.label3.move(180, 200)
-            self.label4.move(180, 200)
+            self.word.move(490, 150)
+            self.pronunciation.move(180,200)
+            self.pos.move(180, 200)
+            self.collocations.move(180, 200)
+            self.example.move(180, 200)
+        elif self.option_Box == -1:
+            # setGeometry(x,y,width,height)
+            self.word.setGeometry(800,1000,40,20)
+            # self.pronunciation.setGeometry(100,200,40,20)
+            # self.pos.setGeometry(200,300,40,20)
+            # self.collocations.setGeometry(300,400,40,20)
+            # self.example.setGeometry(400,500,40,20)
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
         # 比如将stacked_widget的当前小部件设为第一页
