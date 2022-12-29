@@ -52,8 +52,8 @@ class Page1(QWidget):
             self.button.move(180,200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(50,100,40,20)
-            self.button.setGeometry(140, 180, 40, 20)
+            self.lineedit.setGeometry(50,150,40,20)
+            self.button.setGeometry(140, 220, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
@@ -74,7 +74,7 @@ class Page2(QWidget):
         # 如果self.option_Box == 0，则使用 self.lineedit.move 管理布局；
         # 如果 self.option_Box == 1 则使用布局管理器管理布局
         # 如果 self.option_Box = -1 则使用 setGeometry 管理布局
-        self.option_Box = 0
+        self.option_Box = 1
         self.initUI()
 
     def initUI(self):
