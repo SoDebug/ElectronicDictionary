@@ -58,6 +58,54 @@
         layout.addWidget(self.word)
     ```
 
+- 布局管理器`QHBoxLayout()&QVBoxLayout()`
+
+    1) `QVBoxLayout()`竖直布局管理器，在其中的控件均以铅锤（纵向）方式排列
+
+    ```
+    # 创建 QVBoxLayout 布局管理器
+    layout_v = QVBoxLayout()
+    # 将控件word加入QVBoxLayout布局管理器中
+    layout_v.addWidget(self.word)
+    # 使布局管理器显示在Page的布局中
+    self.setLayout(layout_v)
+    ```
+    
+    2) `QHBoxLayout()`水平布局管理器，在其中的控件均以水平（横向）方式排列
+
+    ```
+    # 创建 QHBoxLayout 布局管理器
+    layout_h = QHBoxLayout()
+    # 将控件word加入QHBoxLayout布局管理器中
+    h_layout.addWidget(self.button)
+    # QHBoxLayout 布局管理器 放入 QVBoxLayout 布局管理器 中
+    layout.addLayout(h_layout)
+    ```
+  
+- 控件位置设置
+
+    1) 使用`move(x,y)`控制控件显示位置
+    
+    ```
+    self.lineedit.move(90, 150)
+    ```
+
+    2) 使用`QHBoxLayout()/QVBoxLayout()`控制控件显示位置
+    
+    ```
+    # 创建 QVBoxLayout 布局管理器
+    layout_v = QVBoxLayout()
+    # 将控件word加入QVBoxLayout布局管理器中
+    layout_v.addWidget(self.word)
+    # 使布局管理器显示在Page的布局中
+    self.setLayout(layout_v)
+    ```
+
+    3) 使用`setGeometry(x,y,w,h)`控制控件显示位置    
+
+    ```
+    self.lineedit.setGeometry(50,120,40,20)
+    ```
 
 ## 软件界面UI展示
 第一页
