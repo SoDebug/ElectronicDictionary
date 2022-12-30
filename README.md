@@ -14,7 +14,7 @@
 ## 软件界面UI展示
 第一页
 
- ![Page1](res\Page1.png)
+ ![Page1](https://github.com/SoDebug/ElectronicDictionary/blob/master/res/Page1.png)
  
 第二页
 
