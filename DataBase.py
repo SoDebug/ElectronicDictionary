@@ -1,13 +1,13 @@
 import sqlite3
 
-
 def check(query_word):
     # 连接数据库
-    conn = sqlite3.connect('database.db')
+    conn = sqlite3.connect("database.db")
     # 创建游标
     cursor = conn.cursor()
     # 执行查询语句
-    cursor.execute("SELECT word, pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?", (query_word,))
+    cursor.execute("SELECT word, pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
+                   (query_word,))
     # 获取查询结果
     result = cursor.fetchone()
     # 如果查询结果为空，则返回一个包含 6 个字符 "null" 的列表
@@ -19,3 +19,4 @@ def check(query_word):
     return data
     # 关闭数据库连接
     conn.close()
+check("make")
