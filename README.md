@@ -10,15 +10,15 @@
 - [黄志杰](https://github.com/jazz6699)
 - [王倩](https://github.com/7Kuku7)
 ## 项目实现框图
- ![alt 属性文本](.\res\程序框图.jpg)
+ ![程序框图](res\程序框图.jpg)
 ## 软件界面UI展示
 第一页
 
- ![alt 属性文本](.\res\Page1.png)
+ ![Page1](res\Page1.png)
  
 第二页
 
- ![alt 属性文本](.\res\Page2.png)
+ ![Page2](res\Page2.png)
  
 ## 软件打包
 - 使用`pyinstaller`打包，运行命令`pip install pyinstaller`以安装`pyinstaller`
