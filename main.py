@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import DataBase
+import check
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -95,26 +96,31 @@ class Page2(QWidget):
         self.parent().setWindowTitle("Dictionary - " + query_word)
         # 传递过来的数据应当是名为 data 的列表
         data = DataBase.check(self.query_word)
+        # data = check.check(self.query_word)
         print(data)
-        word, pronunciation, pos, collocations, example = data
+        word, pronunciation, pos, otherforms, collocations, example = data
+        # word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
         # 查询的单词本身
         self.word = QLabel()
-        self.word.setText("单词：" + word)
+        self.word.setText("【单词】：" + word)
         # 查询的发音
         self.pronunciation = QLabel()
-        self.pronunciation.setText("发音：" + pronunciation)
+        self.pronunciation.setText("【发音】：" + pronunciation)
         # 查询的词性
         self.pos = QLabel()
-        self.pos.setText("词性：" + pos)
+        self.pos.setText("【词性】：" + pos)
+        # 查询该单词的其它形式
+        self.otherforms = QLabel()
+        self.otherforms.setText("【其它形式】：" + otherforms)
         # 查询的常用搭配
         self.collocations = QLabel()
-        self.collocations.setText("常用搭配：" + collocations)
+        self.collocations.setText("【常用搭配】：" + collocations)
         # 查询的例句
         self.example = QLabel()
-        self.example.setText("例句学习：" + example)
+        self.example.setText("【例句学习】：" + example)
 
         # 创建按钮
         self.button = QPushButton("返回查询", self)
@@ -126,14 +132,12 @@ class Page2(QWidget):
         if self.option_Box == 1:
             # 创建 QVBoxLayout 布局管理器
             layout = QVBoxLayout()
+            # 将word, pronunciation, pos, otherforms, collocations, example添加到布局管理器中
             layout.addWidget(self.word)
-            # 将第一个 QLabel 组件添加到布局管理器中
             layout.addWidget(self.pronunciation)
-            # 将第二个 QLabel 组件添加到布局管理器中
             layout.addWidget(self.pos)
-            # 将第三个 QLabel 组件添加到布局管理器中
+            layout.addWidget(self.otherforms)
             layout.addWidget(self.collocations)
-            # 将第四个 QLabel 组件添加到布局管理器中
             layout.addWidget(self.example)
             # 创建水平布局管理器并使按钮居中显示
             h_layout = QHBoxLayout()
@@ -182,6 +186,7 @@ class Page2(QWidget):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
+    app.setApplicationName("Dictionary")
     stacked_widget = QStackedWidget()
     page1 = Page1()
     page2 = Page2()
