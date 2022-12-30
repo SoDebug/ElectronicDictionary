@@ -10,7 +10,7 @@
 - [黄志杰](https://github.com/jazz6699)
 - [王倩](https://github.com/7Kuku7)
 ## 项目实现框图
- ![程序框图](res\程序框图.jpg)
+ ![程序框图](https://github.com/SoDebug/ElectronicDictionary/blob/master/res/%E7%A8%8B%E5%BA%8F%E6%A1%86%E5%9B%BE.jpg)
 ## 软件界面UI展示
 第一页
 
@@ -18,7 +18,7 @@
  
 第二页
 
- ![Page2](res\Page2.png)
+ ![Page2](https://github.com/SoDebug/ElectronicDictionary/blob/master/res/Page2.png)
  
 ## 软件打包
 - 使用`pyinstaller`打包，运行命令`pip install pyinstaller`以安装`pyinstaller`
