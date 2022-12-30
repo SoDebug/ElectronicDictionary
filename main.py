@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import DataBase
-import check
+# import check
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -66,6 +66,7 @@ class Page1(QWidget):
         stacked_widget.setCurrentIndex(1)
         # 将输入的内容传递到第二页
         page2.setQueryWord(query_word)
+        # self.line_edit.clear()
         return query_word
 
 
@@ -168,9 +169,23 @@ class Page2(QWidget):
             print("你正在使用一种无效的布局管理办法，请切换回布局管理器来管理此页面布局")
 
     # 添加第二页按钮的作用：返回查询界面继续查询单词
+    # 在返回第一页时应当删除第二页中的所有小部件和布局
+    # 否则后续的查询结果均显示为第一次查询的结果（没有刷新）
     def onButtonClicked(self):
-        # 设置当前显示的小部件为第二页
+        # 检索Page2中的布局
+        layout = self.layout()
+        # 检索Page2中所有的小部件
+        children = self.findChildren(QWidget)
+        # 删除Page2中所有的小部件，防止后续查询出现重影
+        for widget in children:
+            widget.deleteLater()
+        # 删除Page2中的布局
+        if layout is not None:
+            layout.deleteLater()
+        # 跳转到Page1以继续查询
         stacked_widget.setCurrentIndex(0)
+
+
 
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
