@@ -1,7 +1,8 @@
 import sqlite3
 import re
 import requests
-import csv
+from PyQt5.QtWidgets import QMessageBox, QApplication
+
 
 def check(query_word):
     # 连接数据库
@@ -24,6 +25,7 @@ def check(query_word):
     # 关闭数据库连接
     conn.close()
 
+
 def get_database(query_word):
     print("正在尝试从互联网中读取数据...")
     try:
@@ -34,7 +36,7 @@ def get_database(query_word):
             'UM_distinctid': '1855762c8bbccc-02a70722986a89-26021151-1fa400-1855762c8bce7a',
         }
 
-        headers = {
+        heasders = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'Connection': 'keep-alive',
@@ -66,6 +68,14 @@ def get_database(query_word):
         print(pronunciation, type(pronunciation))
         data = ["1", "1", "1", "1", "1", "1"]
     except:
-        print("FAILED: 尝试从互联网中抓取数据失败，请检查网络")
+        # response = QMessageBox.question(None, '程序故障', '程序似乎无法连接到远程数据库，请检查网络！',
+        #                                 QMessageBox.Yes | QMessageBox.No,
+        #                                 QMessageBox.No)
+        #
+        # if response == QMessageBox.Yes:
+        #     print('User clicked "Yes"')
+        # else:
+        #     print('User clicked "No"')
+        QMessageBox.warning(None, '程序故障', '似乎无法连接到远程数据库？请检查网络后重试！')
         data = ["null", "null", "null", "null", "null", "null"]
     return data
