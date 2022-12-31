@@ -36,7 +36,7 @@ def get_database(query_word):
             'UM_distinctid': '1855762c8bbccc-02a70722986a89-26021151-1fa400-1855762c8bce7a',
         }
 
-        heasders = {
+        headers = {
             'Accept': 'application/json, text/plain, */*',
             'Accept-Language': 'zh-CN,zh;q=0.9',
             'Connection': 'keep-alive',
