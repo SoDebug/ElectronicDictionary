@@ -1,9 +1,6 @@
-from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
-# 拟实现多页面
+from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import DataBase
-# import check
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -183,6 +180,7 @@ class Page2(QWidget):
         if layout is not None:
             layout.deleteLater()
         # 跳转到Page1以继续查询
+        self.parent().setWindowTitle("Dictionary")
         stacked_widget.setCurrentIndex(0)
 
 
