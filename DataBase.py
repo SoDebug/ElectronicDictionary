@@ -22,13 +22,13 @@ def check(query_word):
         # 创建游标
         cursor = conn.cursor()
         # 执行查询语句
-        cursor.execute("SELECT word, pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
+        cursor.execute("SELECT word, meaning,pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
                        (query_word,))
         # 获取查询结果
         result = cursor.fetchone()
-        # 如果查询结果为空，则返回一个包含 6 个字符 "null" 的列表
+        # 如果查询结果为空，则返回一个包含 7 个字符 "null" 的列表
         if result is None:
-            # data = ["null", "null", "null", "null", "null", "null"]
+            # data = ["null", "null", "null", "null", "null", "null", "null"]
             logging.info("{}: {}: [WARNING]本地数据库没有所需要查询的单词，尝试从互联网数据库中查询...".format(
                 time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
             try:
@@ -91,7 +91,7 @@ def get_database(query_word):
         try:
             # print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
             #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
-            data = analyze(data)
+            data = analyze(data,query_word)
             logging.info("{}: {}: [Succeed]数据分析成功！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                  current_function_name()))
             # print(data)
@@ -117,11 +117,11 @@ def get_database(query_word):
         QMessageBox.warning(None, '程序故障', '似乎无法连接到远程数据库？请检查网络后重试！')
         logging.info("{}: {}: [ERROR]FAILED:无法与互联网数据库取得联系...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                   current_function_name()))
-        data = ["null", "null", "null", "null", "null", "null"]
+        data = ["null", "null", "null", "null", "null", "null", "null"]
     return data
 
 
-def analyze(data):
+def analyze(data,query_word):
     logging.info("{}: {}: [INFO]已取得互联网查询结果，尝试解析数据...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                              current_function_name()))
     word, pronunciation, pos, otherforms, collocations, example = data
@@ -130,7 +130,8 @@ def analyze(data):
     # print(type(data))
     try:
         try:
-            word = get_word(pos)
+            word = query_word
+            meaning = get_meaning(pos)
             pronunciation = get_pronunciation(pronunciation)
             pos = get_pos(pos)
             otherforms = get_otherforms(otherforms)
@@ -141,7 +142,8 @@ def analyze(data):
                                                                         current_function_name()))
         try:
             try:
-                add_data(word, pronunciation, pos, otherforms, collocations, example)
+                add_data(word, meaning, pronunciation, pos, otherforms, collocations, example)
+                # data = [word, pronunciation, pos, otherforms, collocations, example]
             except:
                 logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                    current_function_name()))
@@ -164,11 +166,13 @@ def get_pos(pos):
         if re.match(r'(n\.|adj\.|v\.|adv\.|prep\.|conj\.)', item[0]):
             result.append(item[0] + '/ ')
     pos = ''.join(result)[:-1]
-    print(pos)
+    if not pos:
+        pos = "null"
+    # print(pos)
     return pos
 
 
-def get_word(word):
+def get_meaning(word):
     try:
         # print(word)
         result = []
@@ -179,7 +183,9 @@ def get_word(word):
                 if match:
                     result.append(list(match.groups()))
         result = '、'.join([''.join(x) for x in result])
-        print(result)
+        # print(result)
+        if not result:
+            result = "null"
         return result
 
     except:
@@ -203,7 +209,9 @@ def get_pronunciation(pronunciation):
         elif len(temp) < 3:
             result.append(temp[0] + ": " + temp[1])
         result = '  '.join(result)
-        print(result)
+        # print(result)
+        if not result:
+            result = "null"
         return result
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -219,7 +227,9 @@ def get_otherforms(otherforms):
                 temp.append(i)
         temp = temp[1::2]
         result = '|'.join(temp)
-        print(result)
+        # print(result)
+        if not result:
+            result = "null"
         return result
         # if len(otherforms)
     except:
@@ -230,7 +240,10 @@ def get_otherforms(otherforms):
 def get_collocations(collocations):
     try:
         result = '|'.join(collocations)
-        print(result)
+        if len(result) == 0 :
+            result = "null"
+        return result
+        # print(result)
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                         current_function_name()))
@@ -239,24 +252,26 @@ def get_collocations(collocations):
 def get_example(example):
     try:
         result = '\n'.join(example)
-        print(result)
+        # print(result)
+        if not result:
+            result = "null"
         return result
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                         current_function_name()))
 
 
-def add_data(word, pronunciation, pos, otherforms, collocations, example):
+def add_data(word, meaning, pronunciation, pos, otherforms, collocations, example):
     # Connect to the database
-    conn = sqlite3.connect('word.db')
+    conn = sqlite3.connect('database.db')
 
     # Create a cursor
     cursor = conn.cursor()
 
     # Insert the values into the table
     cursor.execute(
-        "INSERT INTO words (word, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?)",
-        (word, pronunciation, pos, otherforms, collocations, example))
+        "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        (word, meaning, pronunciation, pos, otherforms, collocations, example))
 
     # Commit the changes
     conn.commit()
@@ -267,4 +282,6 @@ def add_data(word, pronunciation, pos, otherforms, collocations, example):
 
 # get_database("make")
 
-check("snake")
+# check("snake")
+
+# add_data("蛇、蛇行，蜿蜒前进","英: / sneɪk /  美: / sneɪk /","n./ v./","snakes|snakes|snaking|snaked|snaked","grass snake|tiger snake|Snake River|snake venom|snake charmer|green snake","The snake slowly uncoiled.")
