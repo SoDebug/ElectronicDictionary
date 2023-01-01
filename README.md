@@ -119,4 +119,4 @@
 ## 软件打包
 - 使用`pyinstaller`打包，运行命令`pip install pyinstaller`以安装`pyinstaller`
 - 打包命令```pyinstaller -F -w main.py --add-data database.db;.```
-- 注意事项：本软件需要从外部访问数据库`database.db`,如果软件运行目录下无该数据库可能会引发闪退，因为目前暂未完善从网络中获取查询结果
+- 注意事项：本软件需要从外部访问数据库`database.db`,如果软件运行目录下无该数据库可能会引发闪退，~~因为目前暂未完善从网络中获取查询结果~~
