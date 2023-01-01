@@ -51,8 +51,8 @@ class Page1(QWidget):
             self.button.move(180,200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(50,120,40,20)
-            self.button.setGeometry(140, 220, 40, 20)
+            self.lineedit.setGeometry(75,100,40,20)
+            self.button.setGeometry(170, 180, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
