@@ -121,7 +121,7 @@ def analyze(data):
     word = get_word(pos)
     pronunciation = get_pronunciation(pronunciation)
     pos = get_pos(pos)
-
+    otherforms = get_otherforms(otherforms)
 
 
 # 转用于分析数据的函数群
@@ -136,6 +136,7 @@ def get_pos(pos):
     print(pos)
     return pos
 
+
 def get_word(word):
     result = []
     print(type(word[0][1]))
@@ -145,11 +146,30 @@ def get_word(word):
         _, s = item
         result.append(re.findall(r'(.+?)；', s)[0])
     result = ';'.join(result) + ';'
-    word = result
-    print(word)
-    return word
+    print(result)
+    return result
 
-def get_pronunciation(get_pronunciation):
 
+def get_pronunciation(pronunciation):
+    # print("pronunciation:%s" % pronunciation)
+    # print(type(pronunciation[1]))
+    # print(pronunciation[1][1])
+    temp = []
+    result = []
+    for item in pronunciation:
+        for i in item:
+            temp.append(i)
+    if len(temp) > 2:
+        result.append(temp[0] + ": " + temp[1])
+        result.append(temp[2] + ": " + temp[3])
+    elif len(temp) < 3:
+        result.append(temp[0] + ": " + temp[1])
+    result = '  '.join(result)
+    print(result)
+    return result
+
+
+def get_otherforms(otherforms):
+    print(otherforms)
 
 get_database("make")
