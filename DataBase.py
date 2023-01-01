@@ -22,8 +22,9 @@ def check(query_word):
         # 创建游标
         cursor = conn.cursor()
         # 执行查询语句
-        cursor.execute("SELECT word, meaning,pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
-                       (query_word,))
+        cursor.execute(
+            "SELECT word, meaning,pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
+            (query_word,))
         # 获取查询结果
         result = cursor.fetchone()
         # 如果查询结果为空，则返回一个包含 7 个字符 "null" 的列表
@@ -91,7 +92,7 @@ def get_database(query_word):
         try:
             # print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
             #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
-            data = analyze(data,query_word)
+            data = analyze(data, query_word)
             logging.info("{}: {}: [Succeed]数据分析成功！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                  current_function_name()))
             # print(data)
@@ -121,7 +122,7 @@ def get_database(query_word):
     return data
 
 
-def analyze(data,query_word):
+def analyze(data, query_word):
     logging.info("{}: {}: [INFO]已取得互联网查询结果，尝试解析数据...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                              current_function_name()))
     word, pronunciation, pos, otherforms, collocations, example = data
@@ -142,9 +143,11 @@ def analyze(data,query_word):
                                                                         current_function_name()))
         try:
             try:
+                if not pronunciation:
+                    pronunciation = "null"
                 add_data(word, meaning, pronunciation, pos, otherforms, collocations, example)
                 data = [word, meaning, pronunciation, pos, otherforms, collocations, example]
-                return  data
+                return data
                 # data = [word, pronunciation, pos, otherforms, collocations, example]
             except:
                 logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -212,7 +215,7 @@ def get_pronunciation(pronunciation):
             result.append(temp[0] + ": " + temp[1])
         result = '  '.join(result)
         # print(result)
-        if not result:
+        if len(result) == 0:
             result = "null"
         return result
     except:
@@ -242,7 +245,7 @@ def get_otherforms(otherforms):
 def get_collocations(collocations):
     try:
         result = '|'.join(collocations)
-        if len(result) == 0 :
+        if len(result) == 0:
             result = "null"
         return result
         # print(result)
@@ -270,6 +273,10 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
     # Create a cursor
     cursor = conn.cursor()
 
+    # Verify data
+    if not pronunciation:
+        pronunciation = "null"
+
     # Insert the values into the table
     cursor.execute(
         "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -280,7 +287,6 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
 
     # Close the connection
     conn.close()
-
 
 # get_database("make")
 
