@@ -51,8 +51,8 @@ class Page1(QWidget):
             self.button.move(180,200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(75,100,40,20)
-            self.button.setGeometry(170, 180, 40, 20)
+            self.lineedit.setGeometry(100,140,40,20)
+            self.button.setGeometry(190, 220, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
@@ -108,15 +108,18 @@ class Page2(QWidget):
         self.word.setText("【单词】：" + word)
         # 查询的单词意思
         self.meaning= QLabel()
+        self.meaning.setWordWrap(True)
         self.meaning.setText("【意思】：" + meaning)
         # 查询的发音
         self.pronunciation = QLabel()
         self.pronunciation.setText("【发音】：" + pronunciation)
         # 查询的词性
         self.pos = QLabel()
+        self.pos.setWordWrap(True)
         self.pos.setText("【词性】：" + pos)
         # 查询该单词的其它形式
         self.otherforms = QLabel()
+        self.otherforms.setWordWrap(True)
         self.otherforms.setText("【其它形式】：" + otherforms)
         # 查询的常用搭配
         self.collocations = QLabel()
@@ -217,6 +220,6 @@ if __name__ == "__main__":
     stacked_widget.addWidget(page1)
     stacked_widget.addWidget(page2)
     # 设置窗口大小
-    stacked_widget.resize(450, 300)
+    stacked_widget.resize(500, 400)
     stacked_widget.show()
     sys.exit(app.exec_())
