@@ -1,9 +1,7 @@
-from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QMessageBox
-# 拟实现多页面
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import DataBase
-# import check
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -53,8 +51,8 @@ class Page1(QWidget):
             self.button.move(180,200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(50,120,40,20)
-            self.button.setGeometry(140, 220, 40, 20)
+            self.lineedit.setGeometry(100,140,40,20)
+            self.button.setGeometry(190, 220, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
 
@@ -99,7 +97,8 @@ class Page2(QWidget):
         data = DataBase.check(self.query_word)
         # data = check.check(self.query_word)
         print(data)
-        word, pronunciation, pos, otherforms, collocations, example = data
+        word, meaning, pronunciation, pos, otherforms, collocations, example = data
+        # word, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
@@ -107,21 +106,32 @@ class Page2(QWidget):
         # 查询的单词本身
         self.word = QLabel()
         self.word.setText("【单词】：" + word)
+        # 查询的单词意思
+        self.meaning= QLabel()
+        self.meaning.setWordWrap(True)
+        self.meaning.setText("【意思】：" + meaning)
         # 查询的发音
         self.pronunciation = QLabel()
         self.pronunciation.setText("【发音】：" + pronunciation)
         # 查询的词性
         self.pos = QLabel()
+        self.pos.setWordWrap(True)
         self.pos.setText("【词性】：" + pos)
         # 查询该单词的其它形式
         self.otherforms = QLabel()
+        self.otherforms.setWordWrap(True)
         self.otherforms.setText("【其它形式】：" + otherforms)
         # 查询的常用搭配
         self.collocations = QLabel()
+        self.collocations.setWordWrap(True)
         self.collocations.setText("【常用搭配】：" + collocations)
+        # self.collocations.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         # 查询的例句
         self.example = QLabel()
+        self.example.setWordWrap(True)
+        # self.example.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.example.setText("【例句学习】：" + example)
+        # self.example.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
         # 创建按钮
         self.button = QPushButton("返回查询", self)
@@ -135,6 +145,7 @@ class Page2(QWidget):
             layout = QVBoxLayout()
             # 将word, pronunciation, pos, otherforms, collocations, example添加到布局管理器中
             layout.addWidget(self.word)
+            layout.addWidget(self.meaning)
             layout.addWidget(self.pronunciation)
             layout.addWidget(self.pos)
             layout.addWidget(self.otherforms)
@@ -183,6 +194,7 @@ class Page2(QWidget):
         if layout is not None:
             layout.deleteLater()
         # 跳转到Page1以继续查询
+        self.parent().setWindowTitle("Dictionary")
         stacked_widget.setCurrentIndex(0)
 
 
@@ -208,6 +220,6 @@ if __name__ == "__main__":
     stacked_widget.addWidget(page1)
     stacked_widget.addWidget(page2)
     # 设置窗口大小
-    stacked_widget.resize(400, 300)
+    stacked_widget.resize(500, 400)
     stacked_widget.show()
     sys.exit(app.exec_())
