@@ -103,7 +103,7 @@ class Page2(QWidget):
         # 创建第一个 QLabel 组件
         # 查询的单词本身
         self.word = QLabel()
-        self.word.setText("【单词】：" + word)
+        self.word.setText("【意思】：" + word)
         # 查询的发音
         self.pronunciation = QLabel()
         self.pronunciation.setText("【发音】：" + pronunciation)
