@@ -96,14 +96,18 @@ class Page2(QWidget):
         data = DataBase.check(self.query_word)
         # data = check.check(self.query_word)
         print(data)
-        word, pronunciation, pos, otherforms, collocations, example = data
+        word, meaning, pronunciation, pos, otherforms, collocations, example = data
+        # word, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
         # 查询的单词本身
         self.word = QLabel()
-        self.word.setText("【意思】：" + word)
+        self.word.setText("【单词】：" + word)
+        # 查询的单词意思
+        self.meaning= QLabel()
+        self.meaning.setText("【意思】：" + meaning)
         # 查询的发音
         self.pronunciation = QLabel()
         self.pronunciation.setText("【发音】：" + pronunciation)
@@ -132,6 +136,7 @@ class Page2(QWidget):
             layout = QVBoxLayout()
             # 将word, pronunciation, pos, otherforms, collocations, example添加到布局管理器中
             layout.addWidget(self.word)
+            layout.addWidget(self.meaning)
             layout.addWidget(self.pronunciation)
             layout.addWidget(self.pos)
             layout.addWidget(self.otherforms)

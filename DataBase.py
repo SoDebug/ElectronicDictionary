@@ -143,6 +143,8 @@ def analyze(data,query_word):
         try:
             try:
                 add_data(word, meaning, pronunciation, pos, otherforms, collocations, example)
+                data = [word, meaning, pronunciation, pos, otherforms, collocations, example]
+                return  data
                 # data = [word, pronunciation, pos, otherforms, collocations, example]
             except:
                 logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
