@@ -1,3 +1,4 @@
+from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
 import sys
 import DataBase
@@ -119,10 +120,15 @@ class Page2(QWidget):
         self.otherforms.setText("【其它形式】：" + otherforms)
         # 查询的常用搭配
         self.collocations = QLabel()
+        self.collocations.setWordWrap(True)
         self.collocations.setText("【常用搭配】：" + collocations)
+        # self.collocations.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         # 查询的例句
         self.example = QLabel()
+        self.example.setWordWrap(True)
+        # self.example.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.example.setText("【例句学习】：" + example)
+        # self.example.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
 
         # 创建按钮
         self.button = QPushButton("返回查询", self)
@@ -211,6 +217,6 @@ if __name__ == "__main__":
     stacked_widget.addWidget(page1)
     stacked_widget.addWidget(page2)
     # 设置窗口大小
-    stacked_widget.resize(400, 300)
+    stacked_widget.resize(450, 300)
     stacked_widget.show()
     sys.exit(app.exec_())
