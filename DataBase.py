@@ -122,6 +122,7 @@ def analyze(data):
     pronunciation = get_pronunciation(pronunciation)
     pos = get_pos(pos)
     otherforms = get_otherforms(otherforms)
+    collocations = get_collocations(collocations)
 
 
 # 转用于分析数据的函数群
@@ -171,5 +172,18 @@ def get_pronunciation(pronunciation):
 
 def get_otherforms(otherforms):
     print(otherforms)
+    temp = []
+    for item in otherforms:
+        for i in item:
+            temp.append(i)
+    temp = temp[1::2]
+    result = '、'.join(temp)
+    print(result)
+    return result
+    # if len(otherforms)
+
+
+def get_collocations(collocations):
+    print(collocations)
 
 get_database("make")
