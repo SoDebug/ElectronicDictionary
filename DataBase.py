@@ -31,12 +31,18 @@ def check(query_word):
             # data = ["null", "null", "null", "null", "null", "null"]
             logging.info("{}: {}: [WARNING]本地数据库没有所需要查询的单词，尝试从互联网数据库中查询...".format(
                 time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
-            data = get_database(query_word)
+            try:
+                data = get_database(query_word)
+                # print(data)
+            except:
+                logging.info("{}: {}: [ERROR]返回数据到UI界面时出错...".format(
+                    time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
         else:
             # 将查询结果储存至列表 data 中
             logging.info(
                 "{}: {}: [INFO]本地数据库检索成功！".format(time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
             data = list(result)
+            # print(data)
         return data
         # 关闭数据库连接
         conn.close()
@@ -85,7 +91,11 @@ def get_database(query_word):
         try:
             # print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
             #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
-            analyze(data)
+            data = analyze(data)
+            logging.info("{}: {}: [Succeed]数据分析成功！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                   current_function_name()))
+            # print(data)
+            return data
         except:
             logging.info("{}: {}: [ERROR]取得数据后尝试分解数据时出错了...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                    current_function_name()))
@@ -118,11 +128,31 @@ def analyze(data):
     # print("这个单词的意思是：", pos, "\n发音是：", pronunciation, type(pronunciation), "\n各种变换形式：",
     #       otherforms, "\n短语:", collocations, "\n例句：", example)
     # print(type(data))
-    word = get_word(pos)
-    pronunciation = get_pronunciation(pronunciation)
-    pos = get_pos(pos)
-    otherforms = get_otherforms(otherforms)
-    collocations = get_collocations(collocations)
+    try:
+        try:
+            word = get_word(pos)
+            pronunciation = get_pronunciation(pronunciation)
+            pos = get_pos(pos)
+            otherforms = get_otherforms(otherforms)
+            collocations = get_collocations(collocations)
+            example = get_example(example)
+        except:
+            logging.info("{}: {}: [ERROR]FAILED:细节分析失败...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                current_function_name()))
+        try:
+            try:
+                add_data(word, pronunciation, pos, otherforms, collocations, example)
+            except:
+                logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                      current_function_name()))
+        except:
+            logging.info("{}: {}: [ERROR]FAILED:汇总数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                current_function_name()))
+
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:尝试进一步解析时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                  current_function_name()))
+    return data
 
 
 # 转用于分析数据的函数群
@@ -139,51 +169,99 @@ def get_pos(pos):
 
 
 def get_word(word):
-    result = []
-    print(type(word[0][1]))
-    # print(word[0][1]+"\n")
-    # print(word[0][2])
-    for item in word:
-        _, s = item
-        result.append(re.findall(r'(.+?)；', s)[0])
-    result = ';'.join(result) + ';'
-    print(result)
-    return result
+    try:
+        result = []
+        print(type(word[0][1]))
+        # print(word[0][1]+"\n")
+        # print(word[0][2])
+        for item in word:
+            _, s = item
+            result.append(re.findall(r'(.+?)；', s)[0])
+        result = ';'.join(result) + ';'
+        print(result)
+        return result
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
 
 
 def get_pronunciation(pronunciation):
     # print("pronunciation:%s" % pronunciation)
     # print(type(pronunciation[1]))
     # print(pronunciation[1][1])
-    temp = []
-    result = []
-    for item in pronunciation:
-        for i in item:
-            temp.append(i)
-    if len(temp) > 2:
-        result.append(temp[0] + ": " + temp[1])
-        result.append(temp[2] + ": " + temp[3])
-    elif len(temp) < 3:
-        result.append(temp[0] + ": " + temp[1])
-    result = '  '.join(result)
-    print(result)
-    return result
+    try:
+        temp = []
+        result = []
+        for item in pronunciation:
+            for i in item:
+                temp.append(i)
+        if len(temp) > 2:
+            result.append(temp[0] + ": " + temp[1])
+            result.append(temp[2] + ": " + temp[3])
+        elif len(temp) < 3:
+            result.append(temp[0] + ": " + temp[1])
+        result = '  '.join(result)
+        print(result)
+        return result
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
 
 
 def get_otherforms(otherforms):
-    print(otherforms)
-    temp = []
-    for item in otherforms:
-        for i in item:
-            temp.append(i)
-    temp = temp[1::2]
-    result = '、'.join(temp)
-    print(result)
-    return result
-    # if len(otherforms)
+    try:
+        # print(otherforms)
+        temp = []
+        for item in otherforms:
+            for i in item:
+                temp.append(i)
+        temp = temp[1::2]
+        result = '|'.join(temp)
+        print(result)
+        return result
+        # if len(otherforms)
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
 
 
 def get_collocations(collocations):
-    print(collocations)
+    try:
+        result = '|'.join(collocations)
+        print(result)
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
 
-get_database("make")
+
+def get_example(example):
+    try:
+        result = '\n'.join(example)
+        print(result)
+        return result
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
+
+
+def add_data(word, pronunciation, pos, otherforms, collocations, example):
+    # Connect to the database
+    conn = sqlite3.connect('word.db')
+
+    # Create a cursor
+    cursor = conn.cursor()
+
+    # Insert the values into the table
+    cursor.execute(
+        "INSERT INTO words (word, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?)",
+        (word, pronunciation, pos, otherforms, collocations, example))
+
+    # Commit the changes
+    conn.commit()
+
+    # Close the connection
+    conn.close()
+
+# get_database("make")
+
+check("word")
