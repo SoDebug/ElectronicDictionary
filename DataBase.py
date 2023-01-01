@@ -93,7 +93,7 @@ def get_database(query_word):
             #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
             data = analyze(data)
             logging.info("{}: {}: [Succeed]数据分析成功！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                   current_function_name()))
+                                                                 current_function_name()))
             # print(data)
             return data
         except:
@@ -138,20 +138,20 @@ def analyze(data):
             example = get_example(example)
         except:
             logging.info("{}: {}: [ERROR]FAILED:细节分析失败...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                current_function_name()))
+                                                                        current_function_name()))
         try:
             try:
                 add_data(word, pronunciation, pos, otherforms, collocations, example)
             except:
                 logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                      current_function_name()))
+                                                                                   current_function_name()))
         except:
             logging.info("{}: {}: [ERROR]FAILED:汇总数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                current_function_name()))
+                                                                          current_function_name()))
 
     except:
         logging.info("{}: {}: [ERROR]FAILED:尝试进一步解析时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                  current_function_name()))
+                                                                            current_function_name()))
     return data
 
 
@@ -170,19 +170,21 @@ def get_pos(pos):
 
 def get_word(word):
     try:
+        # print(word)
         result = []
-        print(type(word[0][1]))
-        # print(word[0][1]+"\n")
-        # print(word[0][2])
-        for item in word:
-            _, s = item
-            result.append(re.findall(r'(.+?)；', s)[0])
-        result = ';'.join(result) + ';'
+        pattern = '(.+?)；'
+        for t in word:
+            match = re.match(pattern, t[1])
+            if match:
+                if match:
+                    result.append(list(match.groups()))
+        result = '、'.join([''.join(x) for x in result])
         print(result)
         return result
+
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+                                                                        current_function_name()))
 
 
 def get_pronunciation(pronunciation):
@@ -205,7 +207,7 @@ def get_pronunciation(pronunciation):
         return result
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+                                                                        current_function_name()))
 
 
 def get_otherforms(otherforms):
@@ -222,7 +224,7 @@ def get_otherforms(otherforms):
         # if len(otherforms)
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+                                                                        current_function_name()))
 
 
 def get_collocations(collocations):
@@ -231,7 +233,7 @@ def get_collocations(collocations):
         print(result)
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+                                                                        current_function_name()))
 
 
 def get_example(example):
@@ -241,7 +243,7 @@ def get_example(example):
         return result
     except:
         logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+                                                                        current_function_name()))
 
 
 def add_data(word, pronunciation, pos, otherforms, collocations, example):
@@ -262,6 +264,7 @@ def add_data(word, pronunciation, pos, otherforms, collocations, example):
     # Close the connection
     conn.close()
 
+
 # get_database("make")
 
-check("word")
+check("snake")
