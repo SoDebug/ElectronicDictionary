@@ -89,8 +89,8 @@ def get_database(query_word):
         except:
             logging.info("{}: {}: [ERROR]取得数据后尝试分解数据时出错了...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                    current_function_name()))
-        print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
-              transformation, "\n短语:", phrase, "\n例句：", example_sentence)
+        # print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
+        #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
         # pronunciation = str(pronunciation[0] + pronunciation[1])
         # print(pronunciation, type(pronunciation))
         # data = ["1", "1", "1", "1", "1", "1"]
@@ -117,8 +117,11 @@ def analyze(data):
     word, pronunciation, pos, otherforms, collocations, example = data
     # print("这个单词的意思是：", pos, "\n发音是：", pronunciation, type(pronunciation), "\n各种变换形式：",
     #       otherforms, "\n短语:", collocations, "\n例句：", example)
-    print(type(data))
-    get_pos(pos)
+    # print(type(data))
+    word = get_word(pos)
+    pronunciation = get_pronunciation(pronunciation)
+    pos = get_pos(pos)
+
 
 
 # 转用于分析数据的函数群
@@ -130,9 +133,23 @@ def get_pos(pos):
         if re.match(r'(n\.|adj\.|v\.|adv\.|prep\.|conj\.)', item[0]):
             result.append(item[0] + '/ ')
     pos = ''.join(result)[:-1]
+    print(pos)
     return pos
 
-def get_word():
-    return 0
+def get_word(word):
+    result = []
+    print(type(word[0][1]))
+    # print(word[0][1]+"\n")
+    # print(word[0][2])
+    for item in word:
+        _, s = item
+        result.append(re.findall(r'(.+?)；', s)[0])
+    result = ';'.join(result) + ';'
+    word = result
+    print(word)
+    return word
 
-get_database("for")
+def get_pronunciation(get_pronunciation):
+
+
+get_database("make")
