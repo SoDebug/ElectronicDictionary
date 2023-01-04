@@ -1,5 +1,7 @@
 import sqlite3
 import re
+import tempfile
+
 import requests
 from PyQt5.QtWidgets import QMessageBox, QApplication
 # 日志维护相关
@@ -7,6 +9,7 @@ import inspect
 import logging
 import time
 import os
+import pygame
 
 logging.basicConfig(filename="log.txt", level=logging.INFO, format='%(asctime)s:%(message)s')
 
@@ -305,7 +308,7 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
 
     # Insert the values into the table
     cursor.execute(
-        "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example,audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example, audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (word, meaning, pronunciation, pos, otherforms, collocations, example, audio))
 
     # Commit the changes
@@ -318,7 +321,7 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
 # 判断数据库是否存在，如果不存在则创建
 def exist_db():
     if not os.path.exists('database.db'):
-        logging.info("{}: {}: [WARNING]:数据库'database.db'不存在,即将创建新的数据库".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+        logging.info("{}: {}: [WARNING]:数据库'database.db'不存在,即将创建新的数据库！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                              current_function_name()))
         # Connect to the database
         conn = sqlite3.connect('database.db')
@@ -346,5 +349,49 @@ def exist_db():
         logging.info(
             "{}: {}: [INFO]:检测到数据库'database.db'！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                     current_function_name()))
-# exist_db()
-check("hello")
+
+
+# 音频提取、播放函数（Debug使用）
+def play_audio(query_word):
+    # 连接到 SQLite 数据库
+    conn = sqlite3.connect('database.db')
+
+    # 创建一个游标
+    cursor = conn.cursor()
+
+    # 使用 "SELECT" 语句检索音频文件
+    # cursor.execute('SELECT audio FROM words WHERE id = 1')
+    cursor.execute(
+        "SELECT audio FROM words WHERE word=?",
+        (query_word,))
+    audio = cursor.fetchone()[0]
+    # 关闭数据库连接
+    conn.close()
+
+    # Create a temporary file to hold the audio data
+    with tempfile.NamedTemporaryFile(delete=False) as f:
+        # Write the audio data to the file
+        f.write(audio)
+        # Get the file path
+        audio_path = f.name
+
+    # Initialize pygame
+    pygame.mixer.init()
+
+    # Load the audio file
+    pygame.mixer.music.load(audio_path)
+
+    # Play the audio file
+    pygame.mixer.music.play()
+
+    # 停顿2秒，修复播放时没有声音的bug
+    time.sleep(2)  # 单位为秒
+    pygame.mixer.music.stop()
+    print(audio_path)
+
+
+# auto delete temp-file
+def delete_temp(audio_path):
+    # Delete the temporary file
+    os.unlink(audio_path)
+play_audio("hello")
