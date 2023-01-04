@@ -126,7 +126,7 @@ def get_database(query_word):
         QMessageBox.warning(None, '程序故障', '似乎无法连接到远程数据库？请检查网络后重试！')
         logging.info("{}: {}: [ERROR]FAILED:>_<:无法与互联网数据库取得联系!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                     current_function_name()))
-        data = ["null", "null", "null", "null", "null", "null", "null"]
+        data = ["null", "null", "null", "null", "null", "null", "null", "null"]
     return data
 
 
