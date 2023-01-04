@@ -1,6 +1,5 @@
 import sqlite3
 import re
-import tempfile
 
 import requests
 from PyQt5.QtWidgets import QMessageBox, QApplication
@@ -29,6 +28,10 @@ def check(query_word):
         cursor.execute(
             "SELECT word, meaning,pronunciation, pos, otherforms, collocations, example, audio FROM words WHERE word=?",
             (query_word,))
+        # 不再处理音频文件
+        # cursor.execute(
+        #     "SELECT word, meaning,pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
+        #     (query_word,))
         # 获取查询结果
         result = cursor.fetchone()
         # 如果查询结果为空，则返回一个包含 8 个字符 "null" 的列表
@@ -150,8 +153,15 @@ def analyze(data, query_word):
             try:
                 if not pronunciation:
                     pronunciation = "null"
-                add_data(word, meaning, pronunciation, pos, otherforms, collocations, example)
-                data = [word, meaning, pronunciation, pos, otherforms, collocations, example]
+                try:
+                    # preparing audio data
+                    audio = get_audio(word)
+                except:
+                    logging.info(
+                        "{}: {}: [ERROR]FAILED:>_<:get_audio()调用失败！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                current_function_name()))
+                add_data(word, meaning, pronunciation, pos, otherforms, collocations, example, audio)
+                data = [word, meaning, pronunciation, pos, otherforms, collocations, example, audio]
                 return data
                 # data = [word, pronunciation, pos, otherforms, collocations, example]
             except:
@@ -277,6 +287,16 @@ def get_audio(key_word):
     try:
         key = 'http://dict.youdao.com/dictvoice?type=0&audio=' + key_word
         response = requests.get(key)
+        if not response.content:
+            logging.info(
+                "{}: {}: [WARNING]type=0 404! ".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                               current_function_name()))
+            key = 'http://dict.youdao.com/dictvoice?type=1&audio=' + key_word
+            response = requests.get(key)
+        else:
+            logging.info(
+                "{}: {}: [INFO]type=0 Done! ".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                               current_function_name()))
         # 将音频文件写入文件
         with open('cache.mp3', 'wb') as f:
             f.write(response.content)
@@ -289,13 +309,8 @@ def get_audio(key_word):
                                                                                     current_function_name()))
 
 
-def add_data(word, meaning, pronunciation, pos, otherforms, collocations, example):
-    try:
-        # preparing audio data
-        audio = get_audio(word)
-    except:
-        logging.info("{}: {}: [ERROR]FAILED:>_<:get_audio()调用失败！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                             current_function_name()))
+def add_data(word, meaning, pronunciation, pos, otherforms, collocations, example, audio):
+
     # Connect to the database
     conn = sqlite3.connect('database.db')
 
@@ -310,6 +325,10 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
     cursor.execute(
         "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example, audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         (word, meaning, pronunciation, pos, otherforms, collocations, example, audio))
+    # 不再处理音频文件
+    # cursor.execute(
+    #     "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?, ?)",
+    #     (word, meaning, pronunciation, pos, otherforms, collocations, example))
 
     # Commit the changes
     conn.commit()
@@ -370,8 +389,8 @@ def play_audio(audio):
     # Play the audio file
     pygame.mixer.music.play()
 
-    # 停顿2秒，修复播放时没有声音的bug
-    time.sleep(2)  # 单位为秒
-    pygame.mixer.music.stop()
+    # 停顿1秒，修复播放时没有声音的bug
+    time.sleep(0.01)  # 单位为秒
+    # pygame.mixer.music.stop()
 
 
