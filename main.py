@@ -100,19 +100,20 @@ class Page2(QWidget):
         # data = check.check(self.query_word)
         try:
             word, meaning, pronunciation, pos, otherforms, collocations, example, audio = data
+            try:
+                # 播放单词读音
+                DataBase.play_audio(audio)
+            except:
+                DataBase.logging.info(
+                    "{}: {}: [ERROR]:>_<:FAILED:音频读取错误，你可能已经遭受了程序闪退。".format(
+                        DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
+                        DataBase.current_function_name()))
         except:
             DataBase.logging.info(
                 "{}: {}: [ERROR]:>_<:FAILED:异常的数据库值data[8],你可能会遭受程序闪退。".format(DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                    DataBase.current_function_name()))
         # word, meaning, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, otherforms, collocations, example = data
-        try:
-            # 播放单词读音
-            DataBase.play_audio(audio)
-        except:
-            DataBase.logging.info(
-                "{}: {}: [ERROR]:>_<:FAILED:音频读取错误，你可能已经遭受了程序闪退。".format(DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                   DataBase.current_function_name()))
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
@@ -220,6 +221,7 @@ class Page2(QWidget):
 
 
 if __name__ == "__main__":
+    DataBase.exist_db()
     app = QApplication(sys.argv)
     app.setApplicationName("Dictionary")
     stacked_widget = QStackedWidget()
