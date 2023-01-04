@@ -6,6 +6,7 @@ from PyQt5.QtWidgets import QMessageBox, QApplication
 import inspect
 import logging
 import time
+import os
 
 logging.basicConfig(filename="log.txt", level=logging.INFO, format='%(asctime)s:%(message)s')
 
@@ -23,20 +24,20 @@ def check(query_word):
         cursor = conn.cursor()
         # 执行查询语句
         cursor.execute(
-            "SELECT word, meaning,pronunciation, pos, otherforms, collocations, example FROM words WHERE word=?",
+            "SELECT word, meaning,pronunciation, pos, otherforms, collocations, example, audio FROM words WHERE word=?",
             (query_word,))
         # 获取查询结果
         result = cursor.fetchone()
-        # 如果查询结果为空，则返回一个包含 7 个字符 "null" 的列表
+        # 如果查询结果为空，则返回一个包含 8 个字符 "null" 的列表
         if result is None:
-            # data = ["null", "null", "null", "null", "null", "null", "null"]
+            # data = ["null", "null", "null", "null", "null", "null", "null", "null"]
             logging.info("{}: {}: [WARNING]本地数据库没有所需要查询的单词，尝试从互联网数据库中查询...".format(
                 time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
             try:
                 data = get_database(query_word)
                 # print(data)
             except:
-                logging.info("{}: {}: [ERROR]返回数据到UI界面时出错...".format(
+                logging.info("{}: {}: [ERROR]FAILED:>_<:返回数据到UI界面时出错!".format(
                     time.strftime("%Y-%m-%d %H:%M:%S"), current_function_name()))
         else:
             # 将查询结果储存至列表 data 中
@@ -98,7 +99,8 @@ def get_database(query_word):
             # print(data)
             return data
         except:
-            logging.info("{}: {}: [ERROR]取得数据后尝试分解数据时出错了...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+            logging.info(
+                "{}: {}: [ERROR]FAILED:>_<:取得数据后尝试分解数据时出错了!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                    current_function_name()))
         # print("发音是：", pronunciation, type(pronunciation), "\n这个单词的意思是：", tarslation, "\n各种变换形式：",
         #       transformation, "\n短语:", phrase, "\n例句：", example_sentence)
@@ -116,8 +118,8 @@ def get_database(query_word):
         # else:
         #     print('User clicked "No"')
         QMessageBox.warning(None, '程序故障', '似乎无法连接到远程数据库？请检查网络后重试！')
-        logging.info("{}: {}: [ERROR]FAILED:无法与互联网数据库取得联系...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                  current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:无法与互联网数据库取得联系!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                    current_function_name()))
         data = ["null", "null", "null", "null", "null", "null", "null"]
     return data
 
@@ -139,8 +141,8 @@ def analyze(data, query_word):
             collocations = get_collocations(collocations)
             example = get_example(example)
         except:
-            logging.info("{}: {}: [ERROR]FAILED:细节分析失败...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+            logging.info("{}: {}: [ERROR]FAILED:>_<:细节分析失败!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
         try:
             try:
                 if not pronunciation:
@@ -150,15 +152,16 @@ def analyze(data, query_word):
                 return data
                 # data = [word, pronunciation, pos, otherforms, collocations, example]
             except:
-                logging.info("{}: {}: [ERROR]尝试为数据库刷新数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                logging.info(
+                    "{}: {}: [ERROR]FAILED:>_<:尝试为数据库刷新数据时出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
                                                                                    current_function_name()))
         except:
-            logging.info("{}: {}: [ERROR]FAILED:汇总数据时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                          current_function_name()))
+            logging.info("{}: {}: [ERROR]FAILED:>_<:汇总数据时出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                            current_function_name()))
 
     except:
-        logging.info("{}: {}: [ERROR]FAILED:尝试进一步解析时出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                            current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:尝试进一步解析时出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                              current_function_name()))
     return data
 
 
@@ -194,8 +197,8 @@ def get_meaning(word):
         return result
 
     except:
-        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:解析函数内部出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
 
 
 def get_pronunciation(pronunciation):
@@ -219,8 +222,8 @@ def get_pronunciation(pronunciation):
             result = "null"
         return result
     except:
-        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:解析函数内部出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
 
 
 def get_otherforms(otherforms):
@@ -238,8 +241,8 @@ def get_otherforms(otherforms):
         return result
         # if len(otherforms)
     except:
-        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:解析函数内部出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
 
 
 def get_collocations(collocations):
@@ -250,8 +253,8 @@ def get_collocations(collocations):
         return result
         # print(result)
     except:
-        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:解析函数内部出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
 
 
 def get_example(example):
@@ -262,11 +265,34 @@ def get_example(example):
             result = "null"
         return result
     except:
-        logging.info("{}: {}: [ERROR]FAILED:解析函数内部出错...".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                        current_function_name()))
+        logging.info("{}: {}: [ERROR]FAILED:>_<:解析函数内部出错!".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                          current_function_name()))
+
+
+# # 获取发音音频文件,并以二进制形式的音频文件作为返回值
+def get_audio(key_word):
+    try:
+        key = 'http://dict.youdao.com/dictvoice?type=0&audio=' + key_word
+        response = requests.get(key)
+        # 将音频文件写入文件
+        with open('cache.mp3', 'wb') as f:
+            f.write(response.content)
+        # 读取音频文件的内容
+        with open('cache.mp3', 'rb') as f:
+            audio = f.read()
+        return audio
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:>_<:无法从互联网处取得音频文件！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                    current_function_name()))
 
 
 def add_data(word, meaning, pronunciation, pos, otherforms, collocations, example):
+    try:
+        # preparing audio data
+        audio = get_audio(word)
+    except:
+        logging.info("{}: {}: [ERROR]FAILED:>_<:get_audio()调用失败！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                             current_function_name()))
     # Connect to the database
     conn = sqlite3.connect('database.db')
 
@@ -279,8 +305,8 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
 
     # Insert the values into the table
     cursor.execute(
-        "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example) VALUES (?, ?, ?, ?, ?, ?, ?)",
-        (word, meaning, pronunciation, pos, otherforms, collocations, example))
+        "INSERT INTO words (word, meaning, pronunciation, pos, otherforms, collocations, example,audio) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        (word, meaning, pronunciation, pos, otherforms, collocations, example, audio))
 
     # Commit the changes
     conn.commit()
@@ -288,8 +314,37 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
     # Close the connection
     conn.close()
 
-# get_database("make")
 
-# check("snake")
+# 判断数据库是否存在，如果不存在则创建
+def exist_db():
+    if not os.path.exists('database.db'):
+        logging.info("{}: {}: [WARNING]:数据库'database.db'不存在,即将创建新的数据库".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                             current_function_name()))
+        # Connect to the database
+        conn = sqlite3.connect('database.db')
 
-# add_data("蛇、蛇行，蜿蜒前进","英: / sneɪk /  美: / sneɪk /","n./ v./","snakes|snakes|snaking|snaked|snaked","grass snake|tiger snake|Snake River|snake venom|snake charmer|green snake","The snake slowly uncoiled.")
+        # Create a cursor
+        cursor = conn.cursor()
+
+        # 使用 "CREATE TABLE" 语句创建数据表
+        cursor.execute('''
+        CREATE TABLE IF NOT EXISTS words (
+            id INTEGER PRIMARY KEY,
+            word TEXT,
+            meaning TEXT,
+            pronunciation TEXT,
+            pos TEXT,
+            otherforms TEXT,
+            collocations TEXT,
+            example TEXT,
+            audio BLOB
+            )
+            ''')
+        conn.commit()
+        conn.close()
+    else:
+        logging.info(
+            "{}: {}: [INFO]:检测到数据库'database.db'！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                    current_function_name()))
+# exist_db()
+check("hello")
