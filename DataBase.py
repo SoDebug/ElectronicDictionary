@@ -321,8 +321,9 @@ def add_data(word, meaning, pronunciation, pos, otherforms, collocations, exampl
 # 判断数据库是否存在，如果不存在则创建
 def exist_db():
     if not os.path.exists('database.db'):
-        logging.info("{}: {}: [WARNING]:数据库'database.db'不存在,即将创建新的数据库！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                             current_function_name()))
+        logging.info(
+            "{}: {}: [WARNING]:数据库'database.db'不存在,即将创建新的数据库！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                                     current_function_name()))
         # Connect to the database
         conn = sqlite3.connect('database.db')
 
@@ -348,28 +349,13 @@ def exist_db():
     else:
         logging.info(
             "{}: {}: [INFO]:检测到数据库'database.db'！".format(time.strftime("%Y-%m-%d %H:%M:%S"),
-                                                                                    current_function_name()))
+                                                               current_function_name()))
 
 
-# 音频提取、播放函数（Debug使用）
-def play_audio(query_word):
-    # 连接到 SQLite 数据库
-    conn = sqlite3.connect('database.db')
-
-    # 创建一个游标
-    cursor = conn.cursor()
-
-    # 使用 "SELECT" 语句检索音频文件
-    # cursor.execute('SELECT audio FROM words WHERE id = 1')
-    cursor.execute(
-        "SELECT audio FROM words WHERE word=?",
-        (query_word,))
-    audio = cursor.fetchone()[0]
-    # 关闭数据库连接
-    conn.close()
-
+# 播放数据库中的二进制文件
+def play_audio(audio):
     # Create a temporary file to hold the audio data
-    with tempfile.NamedTemporaryFile(delete=False) as f:
+    with open('temp', 'wb') as f:
         # Write the audio data to the file
         f.write(audio)
         # Get the file path
@@ -387,11 +373,5 @@ def play_audio(query_word):
     # 停顿2秒，修复播放时没有声音的bug
     time.sleep(2)  # 单位为秒
     pygame.mixer.music.stop()
-    print(audio_path)
 
 
-# auto delete temp-file
-def delete_temp(audio_path):
-    # Delete the temporary file
-    os.unlink(audio_path)
-play_audio("hello")
