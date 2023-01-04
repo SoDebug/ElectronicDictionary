@@ -107,6 +107,73 @@
     self.lineedit.setGeometry(50,120,40,20)
     ```
 
+- Page1逻辑框图呈现
+
+```mermaid
+flowchart TD
+
+A[Page1:用户输入] -->|"产生参数:query_word"| B(点击查询)
+B --> C{"onButtonClicked()"}
+C -->|"Action1:页面切换"| D[Page2:呈现查询内容]
+C -->|"Action2:参数传递"| E[DataBase.py:数据库响应]
+E[DataBase.py:数据库响应] -->|"传递查询结果:data[7]"| D[Page2:接收Page1信号]
+```
+
+- Page2逻辑框图呈现
+
+```mermaid
+flowchart TD
+
+A[Page2:接收Page1信号] --> C{"setQueryWord()"}
+C -->|"Action1:改变应用名(包含查询字符)"| D[Page2:呈现查询内容]
+C -->|"Action2:接收数据库传递参数：data[7]"| E[Qlabel:解析参数]
+E[Qlabel:解析参数] -->|"BoxLayout():排列控件"| D[Page2:呈现查询内容]
+D[Page2:呈现查询内容] -->|完成| F(点击返回查询)
+F(点击返回查询) --> G{"onButtonClicked()"}
+G{"onButtonClicked()"} --> |Action1:页面切换| H(Page1)
+G{"onButtonClicked()"} --> |Action2:删除Page2控件| H(Page1)
+G{"onButtonClicked()"} --> |Action3:恢复应用名| H(Page1)
+```
+
+- 数据库处理模块逻辑框图
+
+```mermaid
+flowchart TD
+A["DataBase.py:接收Page1信号"] -->|来自Page1的参数:query_word| C{"check()"}
+C{"check()"} -->|本地数据库中存在query_word| D["data[7]:返回数据到Page2"]
+C{"check()"} -->|本地数据库不存在query_word| E["联网查询：get_database()"]
+E["联网查询：get_database()"] -->|传递参数:query_word| F["网络数据处理模块"]
+F["网络数据处理模块"] -->|查询成功| G["返回数据到check():data[7]"]
+G["返回数据到check():data[7]"] --> D["data[7]:返回数据到Page2"]
+```
+
+- 网络数据处理模块(requests & re)逻辑框图
+
+```mermaid
+flowchart TD
+A["get_database():接收来自check()的参数"] -->|"来自check()的参数:query_word"| B["获取互联网查询数据并使用正则表达式初步过滤"]
+B -->|"将参数data[6]、query_word传递给深度分析函数"| C["analyze()"]
+C --> D{"深度分析函数群/解析函数群"}
+D -->|Action1传递参数:pos| E["get_meaning():解析单词意思"]
+D -->|Action2传递参数:pronunciation| F["get_pronunciation():解析单词发音"]
+D -->|Action3传递参数:pos| G["get_pos():解析单词词性"]
+D -->|Action4传递参数:otherforms| H["get_otherforms():解析单词其他形式"]
+D -->|Action5传递参数:collocations| I["get_collocations():解析单词搭配"]
+D -->|Action6传递参数:example| J["get_example():解析单词例句"]
+D -->|Action7传递参数:query_word| K["添加字word"]
+E --> L{"数据整合:data[7]"}
+F --> L
+G --> L
+H --> L
+I --> L
+J --> L
+K --> L
+L -->|"参数传递:data[7]"| M["add_data()"]
+L -->|"参数传递:data[7]"| N["数据返回至Page2"]
+M --> O["数据库储存数据"]
+```
+
+
 ## 软件界面UI展示
 第一页
 

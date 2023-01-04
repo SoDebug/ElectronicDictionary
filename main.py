@@ -98,11 +98,21 @@ class Page2(QWidget):
         # 传递过来的数据应当是名为 data 的列表
         data = DataBase.check(self.query_word)
         # data = check.check(self.query_word)
-        word, meaning, pronunciation, pos, otherforms, collocations, example, audio = data
+        try:
+            word, meaning, pronunciation, pos, otherforms, collocations, example, audio = data
+        except:
+            DataBase.logging.info(
+                "{}: {}: [ERROR]:>_<:FAILED:异常的数据库值data[8],你可能会遭受程序闪退。".format(DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                   DataBase.current_function_name()))
         # word, meaning, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, otherforms, collocations, example = data
-        # 播放单词读音
-        DataBase.play_audio(audio)
+        try:
+            # 播放单词读音
+            DataBase.play_audio(audio)
+        except:
+            DataBase.logging.info(
+                "{}: {}: [ERROR]:>_<:FAILED:音频读取错误，你可能已经遭受了程序闪退。".format(DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                   DataBase.current_function_name()))
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
