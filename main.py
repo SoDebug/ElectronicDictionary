@@ -97,7 +97,7 @@ class Page2(QWidget):
         data = DataBase.check(self.query_word)
         # data = check.check(self.query_word)
         print(data)
-        word, meaning, pronunciation, pos, otherforms, collocations, example = data
+        word, meaning, pronunciation, pos, otherforms, collocations, example, audio= data
         # word, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
@@ -212,6 +212,7 @@ class Page2(QWidget):
 
 
 if __name__ == "__main__":
+
     app = QApplication(sys.argv)
     app.setApplicationName("Dictionary")
     stacked_widget = QStackedWidget()
