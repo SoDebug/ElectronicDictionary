@@ -1,7 +1,9 @@
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, QLabel
+from PyQt5.QtWidgets import QLineEdit, QHBoxLayout, QApplication, QWidget, QStackedWidget, QVBoxLayout, QPushButton, \
+    QLabel
 import sys
 import DataBase
+
 
 # 定义第一页面的主要属性和初始化
 class Page1(QWidget):
@@ -14,7 +16,7 @@ class Page1(QWidget):
         self.option_Box = -1
         self.initUI()
 
-# 按钮以及输入框的相关属性设置
+    # 按钮以及输入框的相关属性设置
     def initUI(self):
         # 创建输入框
         self.lineedit = QLineEdit(self)
@@ -48,10 +50,10 @@ class Page1(QWidget):
             self.setLayout(layout)
         elif self.option_Box == 0:
             self.lineedit.move(90, 150)
-            self.button.move(180,200)
+            self.button.move(180, 200)
         elif self.option_Box == -1:
             # setGeometry(x,y,width,height)
-            self.lineedit.setGeometry(100,140,40,20)
+            self.lineedit.setGeometry(100, 140, 40, 20)
             self.button.setGeometry(190, 220, 40, 20)
             # 连接信号和槽函数
         self.button.clicked.connect(self.onButtonClicked)
@@ -96,10 +98,22 @@ class Page2(QWidget):
         # 传递过来的数据应当是名为 data 的列表
         data = DataBase.check(self.query_word)
         # data = check.check(self.query_word)
-        print(data)
-        word, meaning, pronunciation, pos, otherforms, collocations, example = data
+        try:
+            word, meaning, pronunciation, pos, otherforms, collocations, example, audio = data
+            try:
+                # 播放单词读音
+                DataBase.play_audio(audio)
+            except:
+                DataBase.logging.info(
+                    "{}: {}: [ERROR]:>_<:FAILED:音频读取错误，你可能已经遭受了程序闪退。".format(
+                        DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
+                        DataBase.current_function_name()))
+        except:
+            DataBase.logging.info(
+                "{}: {}: [ERROR]:>_<:FAILED:异常的数据库值data[8],你可能会遭受程序闪退。".format(DataBase.time.strftime("%Y-%m-%d %H:%M:%S"),
+                                                                   DataBase.current_function_name()))
+        # word, meaning, pronunciation, pos, otherforms, collocations, example = data
         # word, pronunciation, pos, otherforms, collocations, example = data
-        # word, pronunciation, pos, collocations, example = data
         # # 创建 QVBoxLayout 布局管理器
         # layout = QVBoxLayout()
         # 创建第一个 QLabel 组件
@@ -107,7 +121,7 @@ class Page2(QWidget):
         self.word = QLabel()
         self.word.setText("【单词】：" + word)
         # 查询的单词意思
-        self.meaning= QLabel()
+        self.meaning = QLabel()
         self.meaning.setWordWrap(True)
         self.meaning.setText("【意思】：" + meaning)
         # 查询的发音
@@ -195,9 +209,9 @@ class Page2(QWidget):
             layout.deleteLater()
         # 跳转到Page1以继续查询
         self.parent().setWindowTitle("Dictionary")
+        # 尝试解决播放音频导致的程序闪退：使用pygame.quit()，以避免后续使用pygame异常导致闪退
+        DataBase.pygame.quit()
         stacked_widget.setCurrentIndex(0)
-
-
 
     def closeEvent(self, event):
         # 在这里添加你想要在关闭窗口时执行的代码
@@ -205,13 +219,9 @@ class Page2(QWidget):
         stacked_widget.setCurrentIndex(0)
         event.accept()
 
-    # def setQueryWord(self, query_word):
-    #     self.query_word = query_word
-    #     # Set the application name to "你输入的单词是：[query_word]"
-    #     self.parent().setWindowTitle("Dictionary - " + query_word)
-
 
 if __name__ == "__main__":
+    DataBase.exist_db()
     app = QApplication(sys.argv)
     app.setApplicationName("Dictionary")
     stacked_widget = QStackedWidget()
